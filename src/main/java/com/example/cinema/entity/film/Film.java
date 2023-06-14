@@ -8,6 +8,7 @@ import jakarta.persistence.Enumerated;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 @Entity
@@ -19,6 +20,7 @@ public class Film extends AbstractEntity {
     private String image;
     private LocalDate firstDay;
     private LocalDate lastDay;
+    private LocalTime startTime;
     private int duration;
     private int releaseYear;
     private String description;
