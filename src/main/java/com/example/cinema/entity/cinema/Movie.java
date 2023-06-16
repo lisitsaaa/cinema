@@ -11,7 +11,6 @@ import java.util.List;
 @Builder @AllArgsConstructor @NoArgsConstructor
 public class Movie extends AbstractEntity {
     private String name;
-    private double price;
     private String image;
     private int duration;
     private int releaseYear;

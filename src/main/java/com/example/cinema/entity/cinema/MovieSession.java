@@ -13,10 +13,11 @@ import java.time.LocalDate;
 public class MovieSession extends AbstractEntity {
     private LocalDate date;
     private LocalDate startedTime;
+    private double price;
 
     @OneToOne
     private Movie movie;
 
     @OneToOne
-    private Hall hall;
+    private Cinema cinema;
 }
