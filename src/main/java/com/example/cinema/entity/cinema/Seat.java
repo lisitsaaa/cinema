@@ -20,7 +20,7 @@ public class Seat extends AbstractEntity {
     private PlaceType placeType;
 
     enum PlaceType{
-        SINGLE, LOVE, FAMILY, BED
+        SINGLE, LOVE_SEAT, FAMILY_SEAT, BED
     }
 
     enum Status{
