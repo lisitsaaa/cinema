@@ -13,6 +13,7 @@ import java.util.Set;
 public class User extends AbstractEntity {
     private String firstName;
     private String lastName;
+    private String username;
     private String email;
     private String password;
     private int age;
