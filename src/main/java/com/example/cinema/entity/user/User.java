@@ -17,7 +17,7 @@ public class User extends AbstractEntity {
     private String password;
     private int age;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     private Telephone telephone;
 
     @ElementCollection

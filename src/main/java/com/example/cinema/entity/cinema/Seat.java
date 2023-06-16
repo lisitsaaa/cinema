@@ -1,4 +1,4 @@
-package com.example.cinema.entity.seat;
+package com.example.cinema.entity.cinema;
 
 import com.example.cinema.entity.AbstractEntity;
 import jakarta.persistence.Entity;
