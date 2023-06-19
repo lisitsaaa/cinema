@@ -1,8 +1,9 @@
 package com.example.cinema.entity.user;
 
 import com.example.cinema.entity.AbstractEntity;
-import jakarta.persistence.Entity;
 import lombok.*;
+
+import javax.persistence.Entity;
 
 @Entity
 @Setter @Getter
