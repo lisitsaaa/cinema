@@ -1,11 +1,11 @@
 package com.example.cinema.entity.user;
 
 import com.example.cinema.entity.AbstractEntity;
-import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import javax.persistence.*;
 import java.util.Collection;
 import java.util.Set;
 

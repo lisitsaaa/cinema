@@ -1,10 +1,10 @@
 package com.example.cinema.entity.cinema;
 
 import com.example.cinema.entity.AbstractEntity;
-import jakarta.persistence.Entity;
-import jakarta.persistence.OneToOne;
 import lombok.*;
 
+import javax.persistence.Entity;
+import javax.persistence.OneToOne;
 import java.time.LocalDate;
 
 @Entity

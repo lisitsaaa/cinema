@@ -1,9 +1,12 @@
 package com.example.cinema.entity.cinema;
 
 import com.example.cinema.entity.AbstractEntity;
-import jakarta.persistence.*;
 import lombok.*;
 
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import java.util.List;
 
 @Entity
@@ -27,11 +30,11 @@ public class Movie extends AbstractEntity {
     @Enumerated(EnumType.STRING)
     private List<Genre> genres;
 
-    enum AgeLimit{
+    enum AgeLimit {
         ZERO_PLUS, SIX_PLUS, TWELVE_PLUS, SIXTEEN_PLUS, EIGHTEEN_PLUS
     }
 
-    enum Type{
+    enum Type {
         TWO_D, THREE_D
     }
 

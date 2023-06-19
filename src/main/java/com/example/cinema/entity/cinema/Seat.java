@@ -1,10 +1,11 @@
 package com.example.cinema.entity.cinema;
 
 import com.example.cinema.entity.AbstractEntity;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import lombok.*;
+
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 
 @Entity
 @Setter @Getter
