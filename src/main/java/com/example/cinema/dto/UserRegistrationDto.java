@@ -1,6 +1,5 @@
 package com.example.cinema.dto;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,11 +19,11 @@ public class UserRegistrationDto {
     private String username;
 
     @NotNull @NotEmpty @NotBlank
-//    @Pattern(regexp = "^[\\w-]{2,16}@([\\w-]{2,5}\\.)+[\\w-]{2,4}$")
+    @Pattern(regexp = "^[\\w-]{2,16}@([\\w-]{2,5}\\.)+[\\w-]{2,4}$")
     private String email;
 
     @NotNull @NotEmpty @NotBlank
-//    @Pattern(regexp = "^(?=\\d*)(?=[a-z]*)(?=[A-Z]*)(?=[\\W]*).{2,16}$")
+    @Pattern(regexp = "^(?=\\d*)(?=[a-z]*)(?=[A-Z]*)(?=[\\W]*).{2,16}$")
     private String password;
 
     @NotNull
