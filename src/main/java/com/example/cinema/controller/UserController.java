@@ -2,6 +2,7 @@ package com.example.cinema.controller;
 
 import com.example.cinema.dto.UserAuthorizationDto;
 import com.example.cinema.dto.UserRegistrationDto;
+import com.example.cinema.entity.user.Role;
 import com.example.cinema.entity.user.Telephone;
 import com.example.cinema.entity.user.User;
 import com.example.cinema.security.JWTTokenProvider;
@@ -12,10 +13,10 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/user")
@@ -77,6 +78,7 @@ public class UserController {
                         .code(regDto.getCode())
                         .number(regDto.getNumber())
                         .build())
+                .roles(Set.of(Role.USER))
                 .build();
     }
 }

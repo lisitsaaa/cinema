@@ -1,6 +1,5 @@
 package com.example.cinema.service;
 
-import com.example.cinema.entity.user.Role;
 import com.example.cinema.entity.user.User;
 import com.example.cinema.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +10,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
-import java.util.Set;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -23,7 +21,6 @@ public class UserService implements UserDetailsService {
     }
 
     public User save(User user){
-        user.setRoles(Set.of(Role.USER));
         user.setPassword(passwordEncoder().encode(user.getPassword()));
         return userRepository.save(user);
     }
