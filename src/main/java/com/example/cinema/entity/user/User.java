@@ -24,7 +24,7 @@ public class User extends AbstractEntity implements UserDetails {
     @OneToOne(cascade = CascadeType.ALL)
     private Telephone telephone;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
     private Set<Role> roles;
 
