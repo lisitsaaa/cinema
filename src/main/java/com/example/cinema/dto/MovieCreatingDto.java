@@ -7,6 +7,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @NoArgsConstructor @AllArgsConstructor
 public class MovieCreatingDto {
@@ -16,6 +18,6 @@ public class MovieCreatingDto {
     private int releaseYear;
     private String description;
     private AgeLimit ageLimit;
-    private Genre genre;
+    private List<Genre> genres;
     private MovieType movieType;
 }
