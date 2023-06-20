@@ -26,11 +26,6 @@ public class UserController {
     @Autowired
     private JWTTokenProvider jwtTokenProvider;
 
-    @GetMapping
-    public String hello(){
-        return "hello";
-    }
-
     @PostMapping
     public ResponseEntity<User> registration(@RequestBody @Valid UserRegistrationDto regDto,
                                              BindingResult bindingResult){
