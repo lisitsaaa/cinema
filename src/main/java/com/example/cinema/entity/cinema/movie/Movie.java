@@ -23,7 +23,7 @@ public class Movie extends AbstractEntity {
     private AgeLimit ageLimit;
 
     @Enumerated(EnumType.STRING)
-    private MovieType types;
+    private MovieType type;
 
     @ElementCollection
     @Enumerated(EnumType.STRING)
