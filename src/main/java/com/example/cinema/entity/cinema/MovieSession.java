@@ -1,6 +1,7 @@
 package com.example.cinema.entity.cinema;
 
 import com.example.cinema.entity.AbstractEntity;
+import com.example.cinema.entity.cinema.movie.Movie;
 import lombok.*;
 
 import javax.persistence.Entity;
