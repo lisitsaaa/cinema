@@ -1,8 +1,11 @@
 package com.example.cinema.controller;
 
+import com.example.cinema.dto.UserAuthorizationDto;
 import com.example.cinema.dto.UserRegistrationDto;
+import com.example.cinema.entity.user.Role;
 import com.example.cinema.entity.user.Telephone;
 import com.example.cinema.entity.user.User;
+import com.example.cinema.security.JWTTokenProvider;
 import com.example.cinema.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/user")
@@ -20,13 +24,27 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private JWTTokenProvider jwtTokenProvider;
+
     @PostMapping
-    public ResponseEntity<User> registration(@RequestBody @Valid UserRegistrationDto userDto,
+    public ResponseEntity<User> registration(@RequestBody @Valid UserRegistrationDto regDto,
                                              BindingResult bindingResult){
         if (!getValidationResult(bindingResult)) {
             return ResponseEntity.badRequest().build();
         }
-        return ResponseEntity.ok(userService.save(buildRegistrationUser(userDto)));
+        return ResponseEntity.ok(userService.save(buildRegistrationUser(regDto)));
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<String> authorization(@RequestBody @Valid UserAuthorizationDto authDto,
+                                              BindingResult bindingResult){
+        if (getValidationResult(bindingResult)) {
+            User login = userService.login(buildAuthorizationUser(authDto));
+            String token = jwtTokenProvider.generateToken(login.getUsername(), login.getRoles());
+            return ResponseEntity.ok(token);
+        }
+        return ResponseEntity.badRequest().body("Invalid information");
     }
 
     private boolean getValidationResult(BindingResult bindingResult){
@@ -41,18 +59,26 @@ public class UserController {
         return true;
     }
 
-    private User buildRegistrationUser(UserRegistrationDto userDto){
+    private User buildAuthorizationUser(UserAuthorizationDto authDto){
         return User.builder()
-                .firstName(userDto.getFirstName())
-                .lastName(userDto.getLastName())
-                .username(userDto.getUsername())
-                .password(userDto.getPassword())
-                .email(userDto.getEmail())
-                .age(userDto.getAge())
+                .username(authDto.getUsername())
+                .password(authDto.getPassword())
+                .build();
+    }
+
+    private User buildRegistrationUser(UserRegistrationDto regDto){
+        return User.builder()
+                .firstName(regDto.getFirstName())
+                .lastName(regDto.getLastName())
+                .username(regDto.getUsername())
+                .password(regDto.getPassword())
+                .email(regDto.getEmail())
+                .age(regDto.getAge())
                 .telephone(Telephone.builder()
-                        .code(userDto.getCode())
-                        .number(userDto.getNumber())
+                        .code(regDto.getCode())
+                        .number(regDto.getNumber())
                         .build())
+                .roles(Set.of(Role.USER))
                 .build();
     }
 }
