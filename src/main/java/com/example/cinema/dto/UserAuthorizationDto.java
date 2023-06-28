@@ -17,6 +17,6 @@ public class UserAuthorizationDto {
     private String username;
 
     @NotNull @NotEmpty @NotBlank
-//    @Pattern(regexp = "^(?=\\d*)(?=[a-z]*)(?=[A-Z]*)(?=[\\W]*).{2,16}$")
+    @Pattern(regexp = "^(?=\\d*)(?=[a-z]*)(?=[A-Z]*)(?=[\\W]*).{2,16}$")
     private String password;
 }
