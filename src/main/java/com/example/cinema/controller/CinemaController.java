@@ -6,15 +6,14 @@ import com.example.cinema.service.CinemaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
-import java.util.HashMap;
-import java.util.Map;
+
+import static com.example.cinema.controller.util.Validator.*;
 
 @RestController
 @RequestMapping("/cinema")
@@ -29,18 +28,6 @@ public class CinemaController {
             return ResponseEntity.badRequest().build();
         }
         return ResponseEntity.ok(cinemaService.save(buildCinema(cinemaCreatingDto)));
-    }
-
-    private boolean getValidationResult(BindingResult bindingResult){
-        if (bindingResult.hasErrors()) {
-            Map<String, String> errors = new HashMap<>();
-            for(FieldError fieldError : bindingResult.getFieldErrors()){
-                errors.put(fieldError.getCode(), fieldError.getDefaultMessage());
-            }
-            System.out.println(errors);
-            return false;
-        }
-        return true;
     }
 
     private Cinema buildCinema(CinemaCreatingDto dto){

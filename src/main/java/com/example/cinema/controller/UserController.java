@@ -10,13 +10,12 @@ import com.example.cinema.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
+
+import static com.example.cinema.controller.util.Validator.*;
 
 @RestController
 @RequestMapping("/user")
@@ -45,18 +44,6 @@ public class UserController {
                     .generateToken(login.getUsername(), login.getRoles()));
         }
         return ResponseEntity.badRequest().build();
-    }
-
-    private boolean getValidationResult(BindingResult bindingResult){
-        if (bindingResult.hasErrors()) {
-            Map<String, String > errors = new HashMap<>();
-            for(FieldError fieldError : bindingResult.getFieldErrors()){
-                errors.put(fieldError.getField(), fieldError.getDefaultMessage());
-            }
-            System.out.println(errors);
-            return false;
-        }
-        return true;
     }
 
     private User buildAuthorizationUser(UserAuthorizationDto authDto){
