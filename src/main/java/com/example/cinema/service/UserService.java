@@ -1,6 +1,5 @@
 package com.example.cinema.service;
 
-import com.example.cinema.entity.user.Role;
 import com.example.cinema.entity.user.User;
 import com.example.cinema.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +10,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
-import java.util.Set;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -37,7 +35,7 @@ public class UserService implements UserDetailsService {
 
     public User login(User user){
         User byUsername = findByUsername(user.getUsername());
-        if(passwordEncoder().matches(user.getPassword(), byUsername.getPassword())){
+        if (passwordEncoder().matches(user.getPassword(), byUsername.getPassword())) {
             return byUsername;
         }
         throw new RuntimeException("Password isn't correct");

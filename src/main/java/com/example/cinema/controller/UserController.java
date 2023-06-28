@@ -37,13 +37,13 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity<String> authorization(@RequestBody @Valid UserAuthorizationDto authDto,
-                                                BindingResult bindingResult){
+                                              BindingResult bindingResult){
         if (getValidationResult(bindingResult)) {
             User login = userService.login(buildAuthorizationUser(authDto));
-            return ResponseEntity.ok(jwtTokenProvider
-                    .generateToken(login.getUsername(), login.getRoles()));
+            String token = jwtTokenProvider.generateToken(login.getUsername(), login.getRoles());
+            return ResponseEntity.ok(token);
         }
-        return ResponseEntity.badRequest().build();
+        return ResponseEntity.badRequest().body("Invalid information");
     }
 
     private User buildAuthorizationUser(UserAuthorizationDto authDto){
