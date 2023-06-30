@@ -1,11 +1,13 @@
-package com.example.cinema.entity.cinema;
+package com.example.cinema.entity.cinema.seat;
 
 import com.example.cinema.entity.AbstractEntity;
+import com.example.cinema.entity.cinema.Hall;
 import lombok.*;
 
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.ManyToOne;
 
 @Entity
 @Setter @Getter
@@ -18,13 +20,8 @@ public class Seat extends AbstractEntity {
     private Status status;
 
     @Enumerated(EnumType.STRING)
-    private PlaceType placeType;
+    private SeatType seatType;
 
-    enum PlaceType{
-        SINGLE, LOVE_SEAT, FAMILY_SEAT, BED
-    }
-
-    enum Status{
-        FREE, OCCUPIED, BOOKED
-    }
+    @ManyToOne
+    private Hall hall;
 }

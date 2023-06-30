@@ -2,7 +2,7 @@ package com.example.cinema.entity.order;
 
 import com.example.cinema.entity.AbstractEntity;
 import com.example.cinema.entity.cinema.MovieSession;
-import com.example.cinema.entity.cinema.Seat;
+import com.example.cinema.entity.cinema.seat.Seat;
 import com.example.cinema.entity.user.User;
 import lombok.*;
 
