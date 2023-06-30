@@ -1,5 +1,6 @@
 package com.example.cinema.dto;
 
+import com.example.cinema.entity.cinema.Hall;
 import com.example.cinema.entity.cinema.seat.SeatType;
 import com.example.cinema.entity.cinema.seat.Status;
 import lombok.Data;
@@ -20,4 +21,5 @@ public class SeatCreatingDto {
     private int row;
     private Status status;
     private SeatType seatType;
+    private Hall hall;
 }
