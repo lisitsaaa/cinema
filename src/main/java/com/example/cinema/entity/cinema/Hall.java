@@ -2,12 +2,14 @@ package com.example.cinema.entity.cinema;
 
 import com.example.cinema.entity.AbstractEntity;
 import com.example.cinema.entity.cinema.seat.Seat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -17,8 +19,9 @@ public class Hall extends AbstractEntity {
     private String name;
 
     @ManyToOne
+    @JsonIgnore
     private Cinema cinema;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    private List<Seat> seats;
+    @OneToMany(mappedBy = "hall", cascade = CascadeType.ALL)
+    private List<Seat> seats = new ArrayList<>();
 }

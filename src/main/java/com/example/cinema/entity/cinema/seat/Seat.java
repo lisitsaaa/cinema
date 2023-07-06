@@ -2,26 +2,25 @@ package com.example.cinema.entity.cinema.seat;
 
 import com.example.cinema.entity.AbstractEntity;
 import com.example.cinema.entity.cinema.Hall;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 @Entity
 @Setter @Getter
 @Builder @AllArgsConstructor @NoArgsConstructor
 public class Seat extends AbstractEntity {
-    private int seat;
     private int row;
-
-    @Enumerated(EnumType.STRING)
-    private Status status;
+    private int seat;
 
     @Enumerated(EnumType.STRING)
     private SeatType seatType;
 
+    @Enumerated(EnumType.STRING)
+    private Status status;
+
     @ManyToOne
+    @JsonIgnore
     private Hall hall;
 }

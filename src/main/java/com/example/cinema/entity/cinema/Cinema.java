@@ -15,6 +15,6 @@ public class Cinema extends AbstractEntity {
     private String name;
     private String city;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "cinema",cascade = CascadeType.ALL)
     private List<Hall> halls;
 }
