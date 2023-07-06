@@ -1,17 +1,13 @@
 package com.example.cinema.controller;
 
-import com.example.cinema.controller.util.Validator;
-import com.example.cinema.dto.SeatCreatingDto;
+import com.example.cinema.dto.SeatDto;
 import com.example.cinema.entity.cinema.seat.Seat;
+import com.example.cinema.service.HallService;
 import com.example.cinema.service.SeatService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -23,22 +19,26 @@ public class SeatController {
     @Autowired
     private SeatService seatService;
 
-    @PostMapping
-    public ResponseEntity<Seat> save(@RequestBody @Valid SeatCreatingDto dto,
+    @Autowired
+    private HallService hallService;
+
+    @PostMapping("/{hall_id}")
+    public ResponseEntity<Seat> save(@PathVariable long hall_id,
+                                     @RequestBody @Valid SeatDto dto,
                                      BindingResult bindingResult){
         if (!getValidationResult(bindingResult)) {
             return ResponseEntity.badRequest().build();
         }
-        return ResponseEntity.ok(seatService.save(getSeat(dto)));
+        return ResponseEntity.ok(seatService.save(getSeat(dto, hall_id)));
     }
 
-    private Seat getSeat(SeatCreatingDto dto){
+    private Seat getSeat(SeatDto dto, long hall_id){
         return Seat.builder()
                 .row(dto.getRow())
                 .seat(dto.getSeat())
                 .seatType(dto.getSeatType())
                 .status(dto.getStatus())
-                .hall(dto.getHall())
+                .hall(hallService.findById(hall_id))
                 .build();
     }
 }
