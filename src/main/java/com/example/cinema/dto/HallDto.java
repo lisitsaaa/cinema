@@ -1,6 +1,6 @@
 package com.example.cinema.dto;
 
-import com.example.cinema.entity.cinema.Hall;
+import com.example.cinema.entity.cinema.seat.Seat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,9 +8,8 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 @Data
-@NoArgsConstructor @AllArgsConstructor
-public class CinemaCreatingDto {
+@AllArgsConstructor @NoArgsConstructor
+public class HallDto {
     private String name;
-    private String city;
-    private List<Hall> halls;
+    private List<Seat> seats;
 }

@@ -12,7 +12,7 @@ import javax.validation.constraints.NotNull;
 
 @Data
 @Setter @Getter
-public class SeatCreatingDto {
+public class SeatDto {
     @NotNull
     @Min(value = 0)
     private int seat;
