@@ -21,6 +21,7 @@ public class HallService {
         return hallRepository.save(hall);
     }
 
+    @Transactional(readOnly = true)
     public Hall findById(long id){
         Optional<Hall> byId = hallRepository.findById(id);
         if (byId.isPresent()) {

@@ -16,12 +16,12 @@ public class CinemaService {
     @Autowired
     private CinemaRepository cinemaRepository;
 
-    public Cinema save(Cinema cinema){
+    public Cinema save(Cinema cinema) {
         return cinemaRepository.save(cinema);
     }
 
-
-    public Cinema findById(long id){
+    @Transactional(readOnly = true)
+    public Cinema findById(long id) {
         Optional<Cinema> byId = cinemaRepository.findById(id);
         if (byId.isPresent()) {
             Cinema cinema = byId.get();

@@ -15,8 +15,4 @@ public class SeatService {
     public Seat save(Seat seat){
         return seatRepository.save(seat);
     }
-
-//    public Seat findHall(){
-//
-//    }
 }
