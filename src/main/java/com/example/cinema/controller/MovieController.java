@@ -1,6 +1,6 @@
 package com.example.cinema.controller;
 
-import com.example.cinema.dto.MovieCreatingDto;
+import com.example.cinema.dto.MovieDto;
 import com.example.cinema.entity.cinema.movie.Movie;
 import com.example.cinema.service.MovieService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,16 +22,15 @@ public class MovieController {
     private MovieService movieService;
 
     @PostMapping
-    public ResponseEntity<Movie> create(@RequestBody @Valid MovieCreatingDto movieCreatingDto,
+    public ResponseEntity<Movie> create(@RequestBody @Valid MovieDto dto,
                                         BindingResult bindingResult) {
-//        getValidationResult(bindingResult);
         if (!getValidationResult(bindingResult)) {
             return ResponseEntity.badRequest().build();
         }
-        return ResponseEntity.ok(movieService.save(buildMovie(movieCreatingDto)));
+        return ResponseEntity.ok(movieService.save(buildMovie(dto)));
     }
 
-    private Movie buildMovie(MovieCreatingDto dto) {
+    private Movie buildMovie(MovieDto dto) {
         return Movie.builder()
                 .name(dto.getName())
                 .image(dto.getImage())
