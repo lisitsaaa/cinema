@@ -33,4 +33,13 @@ public class HallService {
         }
         throw new RuntimeException("incorrect id");
     }
+
+    @Transactional(readOnly = true)
+    public Hall findByName(String name){
+        Optional<Hall> byName = hallRepository.findByName(name);
+        if (byName.isPresent()) {
+            return byName.get();
+        }
+        throw new RuntimeException("incorrect name");
+    }
 }

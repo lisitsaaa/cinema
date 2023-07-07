@@ -32,4 +32,13 @@ public class CinemaService {
         }
         throw new RuntimeException("incorrect id");
     }
+
+    @Transactional(readOnly = true)
+    public Cinema findByName(String name){
+        Optional<Cinema> byName = cinemaRepository.findByName(name);
+        if (byName.isPresent()) {
+            return byName.get();
+        }
+        throw new RuntimeException("incorrect name");
+    }
 }
