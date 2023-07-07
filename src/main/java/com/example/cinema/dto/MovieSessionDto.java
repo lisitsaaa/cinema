@@ -15,4 +15,5 @@ public class MovieSessionDto {
     private double price;
     private String movieName;
     private String cinemaName;
+    private String hallName;
 }
