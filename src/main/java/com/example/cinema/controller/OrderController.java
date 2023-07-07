@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 import static com.example.cinema.controller.util.Validator.getValidationResult;
+import static org.springframework.http.ResponseEntity.badRequest;
+import static org.springframework.http.ResponseEntity.ok;
 
 @RestController
 @RequestMapping("/order")
@@ -34,9 +36,9 @@ public class OrderController {
                                         @RequestBody @Valid OrderDto dto,
                                         BindingResult bindingResult){
         if (!getValidationResult(bindingResult)) {
-            return ResponseEntity.badRequest().build();
+            return badRequest().build();
         }
-        return ResponseEntity.ok(orderService.save(buildOrder(movie_session_id, userDetails, dto)));
+        return ok(orderService.save(buildOrder(movie_session_id, userDetails, dto)));
     }
 
     private Order buildOrder(long movie_session_id, UserDetails userDetails, OrderDto dto){

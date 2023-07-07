@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 import static com.example.cinema.controller.util.Validator.getValidationResult;
+import static org.springframework.http.ResponseEntity.badRequest;
+import static org.springframework.http.ResponseEntity.ok;
 
 @RestController
 @RequestMapping("/seat")
@@ -27,9 +29,9 @@ public class SeatController {
                                      @RequestBody @Valid SeatDto dto,
                                      BindingResult bindingResult){
         if (!getValidationResult(bindingResult)) {
-            return ResponseEntity.badRequest().build();
+            return badRequest().build();
         }
-        return ResponseEntity.ok(seatService.save(getSeat(dto, hall_id)));
+        return ok(seatService.save(getSeat(dto, hall_id)));
     }
 
     private Seat getSeat(SeatDto dto, long hall_id){

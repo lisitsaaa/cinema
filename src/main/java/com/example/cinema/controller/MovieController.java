@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 
 import static com.example.cinema.controller.util.Validator.*;
+import static org.springframework.http.ResponseEntity.badRequest;
+import static org.springframework.http.ResponseEntity.ok;
 
 @RestController
 @RequestMapping("/movie")
@@ -25,9 +27,9 @@ public class MovieController {
     public ResponseEntity<Movie> create(@RequestBody @Valid MovieDto dto,
                                         BindingResult bindingResult) {
         if (!getValidationResult(bindingResult)) {
-            return ResponseEntity.badRequest().build();
+            return badRequest().build();
         }
-        return ResponseEntity.ok(movieService.save(buildMovie(dto)));
+        return ok(movieService.save(buildMovie(dto)));
     }
 
     private Movie buildMovie(MovieDto dto) {

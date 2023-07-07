@@ -16,6 +16,8 @@ import javax.validation.Valid;
 import java.util.Set;
 
 import static com.example.cinema.controller.util.Validator.*;
+import static org.springframework.http.ResponseEntity.badRequest;
+import static org.springframework.http.ResponseEntity.ok;
 
 @RestController
 @RequestMapping("/user")
@@ -30,9 +32,9 @@ public class UserController {
     public ResponseEntity<User> registration(@RequestBody @Valid UserRegistrationDto regDto,
                                              BindingResult bindingResult){
         if (!getValidationResult(bindingResult)) {
-            return ResponseEntity.badRequest().build();
+            return badRequest().build();
         }
-        return ResponseEntity.ok(userService.save(buildRegistrationUser(regDto)));
+        return ok(userService.save(buildRegistrationUser(regDto)));
     }
 
     @PostMapping("/login")
@@ -41,9 +43,9 @@ public class UserController {
         if (getValidationResult(bindingResult)) {
             User login = userService.login(buildAuthorizationUser(authDto));
             String token = jwtTokenProvider.generateToken(login.getUsername(), login.getRoles());
-            return ResponseEntity.ok(token);
+            return ok(token);
         }
-        return ResponseEntity.badRequest().body("Invalid information");
+        return badRequest().body("Invalid information");
     }
 
     private User buildAuthorizationUser(UserAuthorizationDto authDto){
