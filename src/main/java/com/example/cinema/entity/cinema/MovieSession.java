@@ -22,4 +22,7 @@ public class MovieSession extends AbstractEntity {
 
     @OneToOne
     private Cinema cinema;
+
+    @OneToOne
+    private Hall hall;
 }
