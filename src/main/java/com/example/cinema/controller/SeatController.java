@@ -37,7 +37,7 @@ public class SeatController {
                 .row(dto.getRow())
                 .seat(dto.getSeat())
                 .seatType(dto.getSeatType())
-                .status(dto.getStatus())
+                .seatStatus(dto.getSeatStatus())
                 .hall(hallService.findById(hall_id))
                 .build();
     }

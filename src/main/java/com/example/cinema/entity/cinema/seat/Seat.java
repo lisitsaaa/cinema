@@ -18,7 +18,7 @@ public class Seat extends AbstractEntity {
     private SeatType seatType;
 
     @Enumerated(EnumType.STRING)
-    private Status status;
+    private SeatStatus seatStatus;
 
     @ManyToOne
     @JsonIgnore

@@ -2,7 +2,7 @@ package com.example.cinema.dto;
 
 import com.example.cinema.entity.cinema.Hall;
 import com.example.cinema.entity.cinema.seat.SeatType;
-import com.example.cinema.entity.cinema.seat.Status;
+import com.example.cinema.entity.cinema.seat.SeatStatus;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,7 +19,7 @@ public class SeatDto {
     @NotNull
     @Min(value = 0)
     private int row;
-    private Status status;
+    private SeatStatus seatStatus;
     private SeatType seatType;
     private Hall hall;
 }
