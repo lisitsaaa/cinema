@@ -1,9 +1,13 @@
 package com.example.cinema.controller;
 
-import com.example.cinema.dto.OrderDto;
-import com.example.cinema.entity.order.Order;
+import com.example.cinema.dto.SeatDto;
+import com.example.cinema.entity.cinema.Hall;
+import com.example.cinema.entity.cinema.MovieSession;
+import com.example.cinema.entity.cinema.Order;
+import com.example.cinema.entity.cinema.seat.Seat;
 import com.example.cinema.service.MovieSessionService;
 import com.example.cinema.service.OrderService;
+import com.example.cinema.service.SeatService;
 import com.example.cinema.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -25,29 +29,38 @@ public class OrderController {
     private OrderService orderService;
 
     @Autowired
+    private SeatService seatService;
+
+    @Autowired
     private MovieSessionService movieSessionService;
 
     @Autowired
     private UserService userService;
 
     @PostMapping("/{movie_session_id}")
-    public ResponseEntity<Order> create(@PathVariable long movie_session_id,
-                                        @AuthenticationPrincipal UserDetails userDetails,
-                                        @RequestBody @Valid OrderDto dto,
-                                        BindingResult bindingResult){
+    public ResponseEntity<Order> create(@RequestBody @Valid SeatDto dto,
+                                        BindingResult bindingResult,
+                                        @PathVariable long movie_session_id,
+                                        @AuthenticationPrincipal UserDetails userDetails) {
         if (!getValidationResult(bindingResult)) {
             return badRequest().build();
         }
-        return ok(orderService.save(buildOrder(movie_session_id, userDetails, dto)));
+        MovieSession movieSession = movieSessionService.findById(movie_session_id);
+        return ok(orderService.save(buildOrder(movieSession, dto, userDetails)));
     }
 
-    private Order buildOrder(long movie_session_id, UserDetails userDetails, OrderDto dto){
+    private Order buildOrder(MovieSession movieSession,
+                             SeatDto dto,
+                             UserDetails userDetails) {
         return Order.builder()
+                .movieSession(movieSession)
                 .user(userService.findByUsername(userDetails.getUsername()))
-                .movieSession(movieSessionService.findById(movie_session_id))
-                .seats(dto.getSeats())
+                .seat(updateSeat(dto, movieSession.getHall()))
                 .build();
     }
 
-    //update seat status!
+    private Seat updateSeat(SeatDto dto, Hall hall) {
+        Seat seat = seatService.findByHallAndRowAndSeat(hall, dto.getRow(), dto.getSeat());
+        return seatService.updateSeatStatus(seat.getId(), dto.getSeatStatus());
+    }
 }
