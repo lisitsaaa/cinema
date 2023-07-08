@@ -1,7 +1,6 @@
-package com.example.cinema.entity.order;
+package com.example.cinema.entity.cinema;
 
 import com.example.cinema.entity.AbstractEntity;
-import com.example.cinema.entity.cinema.MovieSession;
 import com.example.cinema.entity.cinema.seat.Seat;
 import com.example.cinema.entity.user.User;
 import lombok.*;
@@ -9,18 +8,24 @@ import lombok.*;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.Table;
 import java.util.List;
 
 @Entity
+@Table(name = "orders")
 @Setter @Getter
-@Builder @AllArgsConstructor @NoArgsConstructor
+@Builder @NoArgsConstructor @AllArgsConstructor
 public class Order extends AbstractEntity {
-    @OneToMany
-    private List<Seat> seats;
+    @OneToOne
+    private MovieSession movieSession;
 
     @OneToOne
     private User user;
 
     @OneToOne
-    private MovieSession movieSession;
+    private Seat seat;
+
+//    @OneToMany
+//    private List<Seat> seats;
+
 }
