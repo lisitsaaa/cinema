@@ -12,12 +12,17 @@ import java.util.Optional;
 
 @Service
 @Transactional
-public class SeatService {
+public class SeatService implements AbstractService<Seat>{
     @Autowired
     private SeatRepository seatRepository;
 
     public Seat save(Seat seat){
         return seatRepository.save(seat);
+    }
+
+    @Override
+    public void remove(long id) {
+        seatRepository.deleteById(id);
     }
 
     @Transactional(readOnly = true)
@@ -36,6 +41,11 @@ public class SeatService {
             return byId.get();
         }
         throw new RuntimeException("try again:)");
+    }
+
+    @Override
+    public void update(Seat seat) {
+        seatRepository.update(seat.getId(), seat.getSeatStatus());
     }
 
     public void updateSeatStatus(long id, SeatStatus seatStatus){
