@@ -1,21 +1,23 @@
 package com.example.cinema.controller;
 
+import com.example.cinema.configuration.jwt.JWTTokenProvider;
 import com.example.cinema.dto.UserAuthorizationDto;
 import com.example.cinema.dto.UserRegistrationDto;
 import com.example.cinema.entity.user.Role;
-import com.example.cinema.entity.user.Telephone;
 import com.example.cinema.entity.user.User;
-import com.example.cinema.configuration.jwt.JWTTokenProvider;
 import com.example.cinema.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import java.util.Set;
 
-import static com.example.cinema.controller.util.Validator.*;
+import static com.example.cinema.controller.util.Validator.getValidationResult;
 import static org.springframework.http.ResponseEntity.badRequest;
 import static org.springframework.http.ResponseEntity.ok;
 
@@ -57,16 +59,10 @@ public class UserController {
 
     private User buildRegistrationUser(UserRegistrationDto regDto){
         return User.builder()
-                .firstName(regDto.getFirstName())
-                .lastName(regDto.getLastName())
                 .username(regDto.getUsername())
                 .password(regDto.getPassword())
                 .email(regDto.getEmail())
                 .age(regDto.getAge())
-                .telephone(Telephone.builder()
-                        .code(regDto.getCode())
-                        .number(regDto.getNumber())
-                        .build())
                 .roles(Set.of(Role.USER))
                 .build();
     }
