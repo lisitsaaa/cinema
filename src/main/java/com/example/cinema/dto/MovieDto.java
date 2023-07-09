@@ -11,7 +11,7 @@ import java.util.List;
 
 @Data
 @NoArgsConstructor @AllArgsConstructor
-public class MovieCreatingDto {
+public class MovieDto {
     private String name;
     private String image;
     private int duration;

@@ -1,4 +1,4 @@
-package com.example.cinema.security;
+package com.example.cinema.configuration.jwt;
 
 import com.example.cinema.entity.user.Role;
 import io.jsonwebtoken.*;

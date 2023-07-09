@@ -1,4 +1,4 @@
-package com.example.cinema.security;
+package com.example.cinema.configuration.jwt;
 
 import javax.naming.AuthenticationException;
 

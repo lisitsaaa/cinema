@@ -7,13 +7,14 @@ import lombok.*;
 import javax.persistence.Entity;
 import javax.persistence.OneToOne;
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Entity
 @Setter @Getter
 @Builder @AllArgsConstructor @NoArgsConstructor
 public class MovieSession extends AbstractEntity {
     private LocalDate date;
-    private LocalDate startedTime;
+    private LocalTime startedTime;
     private double price;
 
     @OneToOne
@@ -21,4 +22,7 @@ public class MovieSession extends AbstractEntity {
 
     @OneToOne
     private Cinema cinema;
+
+    @OneToOne
+    private Hall hall;
 }

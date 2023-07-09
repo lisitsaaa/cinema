@@ -1,6 +1,6 @@
 package com.example.cinema.controller;
 
-import com.example.cinema.dto.MovieCreatingDto;
+import com.example.cinema.dto.MovieDto;
 import com.example.cinema.entity.cinema.movie.Movie;
 import com.example.cinema.service.MovieService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 
 import static com.example.cinema.controller.util.Validator.*;
+import static org.springframework.http.ResponseEntity.badRequest;
+import static org.springframework.http.ResponseEntity.ok;
 
 @RestController
 @RequestMapping("/movie")
@@ -22,16 +24,15 @@ public class MovieController {
     private MovieService movieService;
 
     @PostMapping
-    public ResponseEntity<Movie> create(@RequestBody @Valid MovieCreatingDto movieCreatingDto,
+    public ResponseEntity<Movie> create(@RequestBody @Valid MovieDto dto,
                                         BindingResult bindingResult) {
-//        getValidationResult(bindingResult);
         if (!getValidationResult(bindingResult)) {
-            return ResponseEntity.badRequest().build();
+            return badRequest().build();
         }
-        return ResponseEntity.ok(movieService.save(buildMovie(movieCreatingDto)));
+        return ok(movieService.save(buildMovie(dto)));
     }
 
-    private Movie buildMovie(MovieCreatingDto dto) {
+    private Movie buildMovie(MovieDto dto) {
         return Movie.builder()
                 .name(dto.getName())
                 .image(dto.getImage())
