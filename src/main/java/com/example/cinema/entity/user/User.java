@@ -14,15 +14,10 @@ import java.util.Set;
 @Setter @Getter
 @Builder @AllArgsConstructor @NoArgsConstructor
 public class User extends AbstractEntity implements UserDetails {
-    private String firstName;
-    private String lastName;
     private String username;
     private String email;
     private String password;
     private int age;
-
-    @OneToOne(cascade = CascadeType.ALL)
-    private Telephone telephone;
 
     @ElementCollection(fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)

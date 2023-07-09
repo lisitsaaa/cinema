@@ -10,12 +10,6 @@ import javax.validation.constraints.*;
 @NoArgsConstructor @AllArgsConstructor
 public class UserRegistrationDto {
     @NotNull @NotEmpty @NotBlank
-    private String firstName;
-
-    @NotNull @NotEmpty @NotBlank
-    private String lastName;
-
-    @NotNull @NotEmpty @NotBlank
     private String username;
 
     @NotNull @NotEmpty @NotBlank
@@ -29,10 +23,4 @@ public class UserRegistrationDto {
     @NotNull
     @Min(value = 0)
     private int age;
-
-    @NotNull @NotEmpty @NotBlank
-//    @Pattern(regexp = ) find validation for phone numbers
-    private String code;
-    @NotNull @NotEmpty @NotBlank
-    private String number;
 }
