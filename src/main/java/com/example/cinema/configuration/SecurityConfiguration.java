@@ -1,6 +1,6 @@
 package com.example.cinema.configuration;
 
-import com.example.cinema.security.JWTTokenFilter;
+import com.example.cinema.configuration.jwt.JWTTokenFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -5,7 +5,7 @@ import com.example.cinema.dto.UserRegistrationDto;
 import com.example.cinema.entity.user.Role;
 import com.example.cinema.entity.user.Telephone;
 import com.example.cinema.entity.user.User;
-import com.example.cinema.security.JWTTokenProvider;
+import com.example.cinema.configuration.jwt.JWTTokenProvider;
 import com.example.cinema.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
