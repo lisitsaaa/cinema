@@ -55,12 +55,13 @@ public class OrderController {
         return Order.builder()
                 .movieSession(movieSession)
                 .user(userService.findByUsername(userDetails.getUsername()))
-                .seat(updateSeat(dto, movieSession.getHall()))
+                .seat(getUpdatingUser(movieSession.getHall(), dto))
                 .build();
     }
 
-    private Seat updateSeat(SeatDto dto, Hall hall) {
+    private Seat getUpdatingUser(Hall hall, SeatDto dto){
         Seat seat = seatService.findByHallAndRowAndSeat(hall, dto.getRow(), dto.getSeat());
-        return seatService.updateSeatStatus(seat.getId(), dto.getSeatStatus());
+        seatService.updateSeatStatus(seat.getId(), dto.getSeatStatus());
+        return seatService.findById(seat.getId());
     }
 }
