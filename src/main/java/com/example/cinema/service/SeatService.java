@@ -38,8 +38,7 @@ public class SeatService {
         throw new RuntimeException("try again:)");
     }
 
-    public Seat updateSeatStatus(long id, SeatStatus seatStatus){
+    public void updateSeatStatus(long id, SeatStatus seatStatus){
         seatRepository.update(id, seatStatus);
-        return findById(id);
     }
 }
