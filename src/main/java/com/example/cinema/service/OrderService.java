@@ -15,4 +15,9 @@ public class OrderService {
     public Order save(Order order){
         return orderRepository.save(order);
     }
+
+    @Transactional(readOnly = true)
+    public Order findById(long id){
+        return findById(id);
+    }
 }
