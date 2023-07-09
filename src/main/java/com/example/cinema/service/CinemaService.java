@@ -41,6 +41,11 @@ public class CinemaService implements AbstractService<Cinema> {
         throw new RuntimeException("incorrect id");
     }
 
+    @Override
+    public void update(Cinema cinema) {
+        cinemaRepository.update(cinema.getId(), cinema.getName());
+    }
+
     @Transactional(readOnly = true)
     public List<Cinema> findByCity(String city){
         return cinemaRepository.findByCity(city);
