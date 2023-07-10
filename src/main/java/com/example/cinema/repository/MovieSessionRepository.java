@@ -21,11 +21,11 @@ public interface MovieSessionRepository extends JpaRepository<MovieSession, Long
 
     List<MovieSession> findByMovie(Movie movie);
 
-    @Modifying
-    @Query("update MovieSession ms set ms.date=: date, " +
-            "ms.startedTime=: startedTime, " +
-            "ms.price=: price, " +
-            "ms.hall=: hall " +
-            "where ms.id=: id")
-    void update(long id, LocalDate date, LocalTime startedTime, double price, Hall hall);
+//    @Modifying
+//    @Query("update MovieSession ms set ms.date=: date, " +
+//            "ms.startedTime=: startedTime, " +
+//            "ms.price=: price, " +
+//            "ms.hall=: hall " +
+//            "where ms.id=: id")
+//    void update(long id, LocalDate date, LocalTime startedTime, double price, Hall hall);
 }

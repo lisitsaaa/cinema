@@ -40,9 +40,9 @@ public class MovieSessionService implements AbstractService<MovieSession>{
 
     @Override
     public void update(MovieSession movieSession) {
-        movieSessionRepository.update(movieSession.getId(),
-                movieSession.getDate(), movieSession.getStartedTime(),
-                movieSession.getPrice(), movieSession.getHall());
+//        movieSessionRepository.update(movieSession.getId(),
+//                movieSession.getDate(), movieSession.getStartedTime(),
+//                movieSession.getPrice(), movieSession.getHall());
     }
 
     @Transactional(readOnly = true)
