@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -16,6 +17,7 @@ public class SeatService implements AbstractService<Seat>{
     @Autowired
     private SeatRepository seatRepository;
 
+    @Override
     public Seat save(Seat seat){
         return seatRepository.save(seat);
     }
@@ -25,15 +27,7 @@ public class SeatService implements AbstractService<Seat>{
         seatRepository.deleteById(id);
     }
 
-    @Transactional(readOnly = true)
-    public Seat findByHallAndRowAndSeat(Hall hall, int row, int seat){
-        Optional<Seat> byHallAndRowAndSeat = seatRepository.findByHallAndRowAndSeat(hall, row, seat);
-        if (byHallAndRowAndSeat.isPresent()) {
-            return byHallAndRowAndSeat.get();
-        }
-        throw new RuntimeException("incorrect data");
-    }
-
+    @Override
     @Transactional(readOnly = true)
     public Seat findById(long id){
         Optional<Seat> byId = seatRepository.findById(id);
@@ -46,6 +40,20 @@ public class SeatService implements AbstractService<Seat>{
     @Override
     public void update(Seat seat) {
         seatRepository.update(seat.getId(), seat.getSeatStatus());
+    }
+
+    @Transactional(readOnly = true)
+    public Seat findByHallAndRowAndSeat(Hall hall, int row, int seat){
+        Optional<Seat> byHallAndRowAndSeat = seatRepository.findByHallAndRowAndSeat(hall, row, seat);
+        if (byHallAndRowAndSeat.isPresent()) {
+            return byHallAndRowAndSeat.get();
+        }
+        throw new RuntimeException("incorrect data");
+    }
+
+    @Transactional(readOnly = true)
+    public List<Seat> findByHall(Hall hall){
+        return seatRepository.findByHall(hall);
     }
 
     public void updateSeatStatus(long id, SeatStatus seatStatus){
