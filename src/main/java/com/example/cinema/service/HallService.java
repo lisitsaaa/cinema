@@ -45,7 +45,7 @@ public class HallService implements AbstractService<Hall> {
 
     @Override
     public void update(Hall hall) {
-        hallRepository.update(hall.getId(), hall.getName());
+//        hallRepository.update(hall.getId(), hall.getName());
     }
 
     @Transactional(readOnly = true)

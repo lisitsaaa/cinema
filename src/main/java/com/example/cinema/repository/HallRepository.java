@@ -16,7 +16,7 @@ public interface HallRepository extends JpaRepository<Hall, Long> {
 
     List<Hall> findByCinema(Cinema cinema);
 
-    @Modifying
-    @Query("update Hall h set h.name=: name where h.id=:id")
-    void update(long id, String name);
+//    @Modifying
+//    @Query("update Hall h set h.name=: name where h.id=:id")
+//    void update(long id, String name);
 }

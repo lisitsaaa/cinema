@@ -4,7 +4,7 @@ import com.example.cinema.dto.HallDto;
 import com.example.cinema.entity.cinema.Hall;
 import com.example.cinema.service.CinemaService;
 import com.example.cinema.service.HallService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -12,17 +12,16 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 import static com.example.cinema.controller.util.Validator.getValidationResult;
+import static com.example.cinema.mapper.HallMapper.INSTANCE;
 import static org.springframework.http.ResponseEntity.badRequest;
 import static org.springframework.http.ResponseEntity.ok;
 
 @RestController
 @RequestMapping("/hall")
+@RequiredArgsConstructor
 public class HallController {
-    @Autowired
-    private HallService hallService;
-
-    @Autowired
-    private CinemaService cinemaService;
+    private final HallService hallService;
+    private final CinemaService cinemaService;
 
     @PostMapping("/{cinema_id}")
     public ResponseEntity<Hall> create(@PathVariable long cinema_id,
@@ -31,15 +30,8 @@ public class HallController {
         if (!getValidationResult(bindingResult)) {
             return badRequest().build();
         }
-        return ok(hallService.save(buildHall(dto, cinema_id)));
-    }
-
-    private Hall buildHall(HallDto dto, long cinema_id) {
-        return Hall.builder()
-                .name(dto.getName())
-                .seats(dto.getSeats())
-                .cinema(cinemaService.findById(cinema_id))
-                .build();
+        dto.setCinema(cinemaService.findById(cinema_id));
+        return ok(hallService.save(INSTANCE.dtoToHall(dto)));
     }
 
     @GetMapping("/id")
