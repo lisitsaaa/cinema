@@ -1,5 +1,6 @@
 package com.example.cinema.service;
 
+import com.example.cinema.dto.SeatDto;
 import com.example.cinema.entity.cinema.Hall;
 import com.example.cinema.entity.cinema.seat.Seat;
 import com.example.cinema.entity.cinema.seat.SeatStatus;
@@ -39,8 +40,14 @@ public class SeatService implements AbstractService<Seat>{
 
     @Override
     public void update(Seat entity) {
-        Seat seat = findByHallAndRowAndSeat(entity.getHall(), entity.getRow(), entity.getSeat());
-        seatRepository.update(seat.getId(), seat.getSeatStatus());
+//        Seat seat = findByHallAndRowAndSeat(entity.getHall(), entity.getRow(), entity.getSeat());
+//        seatRepository.update(seat.getId(), entity.getSeatStatus());
+    }
+
+    public Seat updateSeatStatus(Hall hall, SeatDto dto){
+        Seat seat = findByHallAndRowAndSeat(hall, dto.getRow(), dto.getSeat());
+        seatRepository.update(seat.getId(), dto.getSeatStatus());
+        return seat;
     }
 
     @Transactional(readOnly = true)

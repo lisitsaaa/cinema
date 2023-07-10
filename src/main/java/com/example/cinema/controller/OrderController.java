@@ -4,12 +4,12 @@ import com.example.cinema.dto.OrderDto;
 import com.example.cinema.dto.SeatDto;
 import com.example.cinema.entity.cinema.MovieSession;
 import com.example.cinema.entity.cinema.Order;
-import com.example.cinema.mapper.SeatMapper;
+import com.example.cinema.entity.cinema.seat.Seat;
 import com.example.cinema.service.MovieSessionService;
 import com.example.cinema.service.OrderService;
 import com.example.cinema.service.SeatService;
 import com.example.cinema.service.UserService;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -25,12 +25,18 @@ import static org.springframework.http.ResponseEntity.ok;
 
 @RestController
 @RequestMapping("/order")
-@RequiredArgsConstructor
 public class OrderController {
-    private final OrderService orderService;
-    private final SeatService seatService;
-    private final MovieSessionService movieSessionService;
-    private final UserService userService;
+    @Autowired
+    private OrderService orderService;
+
+    @Autowired
+    private SeatService seatService;
+
+    @Autowired
+    private MovieSessionService movieSessionService;
+
+    @Autowired
+    private UserService userService;
 
     @PostMapping("/{movie_session_id}")
     public ResponseEntity<Order> create(@RequestBody @Valid SeatDto seatDto,
@@ -40,23 +46,21 @@ public class OrderController {
         if (!getValidationResult(bindingResult)) {
             return badRequest().build();
         }
+        return ok(orderService.save(INSTANCE.dtoToOrder(getOrderDto(userDetails, movie_session_id, seatDto))));
+    }
+
+    private OrderDto getOrderDto(UserDetails userDetails,
+                                 long movie_session_id,
+                                 SeatDto seatDto){
         MovieSession movieSession = movieSessionService.findById(movie_session_id);
-        updateSeatStatus(seatDto);
+        Seat seat = seatService.updateSeatStatus(movieSession.getHall(), seatDto);
+        seat.setSeatStatus(seatDto.getSeatStatus());
 
-        return ok(orderService.save(INSTANCE.dtoToOrder(getOrderDto(userDetails, movieSession, seatDto))));
+        OrderDto dto = new OrderDto();
+        dto.setUser(userService.findByUsername(userDetails.getUsername()));
+        dto.setMovieSession(movieSession);
+        dto.setSeat(seat);
+        return dto;
+
     }
-
-    private OrderDto getOrderDto(UserDetails userDetails, MovieSession movieSession, SeatDto seatDto){
-        OrderDto orderDto = new OrderDto();
-        orderDto.setUser(userService.findByUsername(userDetails.getUsername()));
-        orderDto.setMovieSession(movieSession);
-        seatDto.setHall(movieSession.getHall());
-        orderDto.setSeat(SeatMapper.INSTANCE.dtoToSeat(seatDto));
-        return orderDto;
-    }
-
-    private void updateSeatStatus(SeatDto dto){
-        seatService.update(SeatMapper.INSTANCE.dtoToSeat(dto));
-    }
-
 }
