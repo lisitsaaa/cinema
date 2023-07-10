@@ -33,7 +33,7 @@ public class OrderService implements AbstractService<Order>{
 
     @Override
     public void update(Order order) {
-        orderRepository.update(order.getId(), order.getSeat());
+//        orderRepository.update(order.getId(), order.getSeat());
     }
 
     public List<Order> findAllByUser(User user){
