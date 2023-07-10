@@ -15,6 +15,8 @@ public interface CinemaRepository extends JpaRepository<Cinema, Long> {
 
     List<Cinema> findByCity(String city);
 
+    Optional<Cinema> findByCityAndName(String city, String name);
+
     @Modifying
     @Query("update Cinema c set c.name=: name where c.id=: id")
     void update(long id, String name);

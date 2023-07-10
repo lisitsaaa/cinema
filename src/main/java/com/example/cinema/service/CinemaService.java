@@ -19,6 +19,10 @@ public class CinemaService implements AbstractService<Cinema> {
 
     @Override
     public Cinema save(Cinema cinema) {
+        Optional<Cinema> byCityAndName = cinemaRepository.findByCityAndName(cinema.getCity(), cinema.getName());
+        if (byCityAndName.isPresent()) {
+            throw new RuntimeException("cinema's already had");
+        }
         return cinemaRepository.save(cinema);
     }
 
