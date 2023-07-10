@@ -2,8 +2,9 @@ package com.example.cinema.controller;
 
 import com.example.cinema.dto.MovieDto;
 import com.example.cinema.entity.cinema.movie.Movie;
+import com.example.cinema.mapper.MovieMapper;
 import com.example.cinema.service.MovieService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,15 +14,15 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 
-import static com.example.cinema.controller.util.Validator.*;
+import static com.example.cinema.controller.util.Validator.getValidationResult;
 import static org.springframework.http.ResponseEntity.badRequest;
 import static org.springframework.http.ResponseEntity.ok;
 
 @RestController
 @RequestMapping("/movie")
+@RequiredArgsConstructor
 public class MovieController {
-    @Autowired
-    private MovieService movieService;
+    private final MovieService movieService;
 
     @PostMapping
     public ResponseEntity<Movie> create(@RequestBody @Valid MovieDto dto,
@@ -29,19 +30,6 @@ public class MovieController {
         if (!getValidationResult(bindingResult)) {
             return badRequest().build();
         }
-        return ok(movieService.save(buildMovie(dto)));
-    }
-
-    private Movie buildMovie(MovieDto dto) {
-        return Movie.builder()
-                .name(dto.getName())
-                .image(dto.getImage())
-                .duration(dto.getDuration())
-                .description(dto.getDescription())
-                .releaseYear(dto.getReleaseYear())
-                .ageLimit(dto.getAgeLimit())
-                .genres(dto.getGenres())
-                .type(dto.getMovieType())
-                .build();
+        return ok(movieService.save(MovieMapper.INSTANCE.dtoToMovie(dto)));
     }
 }

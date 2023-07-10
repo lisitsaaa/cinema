@@ -37,10 +37,10 @@ public class MovieService implements AbstractService<Movie>{
 
     @Override
     public void update(Movie movie) {
-        movieRepository.update(movie.getId(), movie.getName(),
-                movie.getImage(), movie.getDuration(),
-                movie.getReleaseYear(), movie.getDescription(),
-                movie.getAgeLimit(), movie.getGenres(), movie.getType());
+//        movieRepository.update(movie.getId(), movie.getName(),
+//                movie.getImage(), movie.getDuration(),
+//                movie.getReleaseYear(), movie.getDescription(),
+//                movie.getAgeLimit(), movie.getGenres(), movie.getType());
     }
 
     @Transactional(readOnly = true)
