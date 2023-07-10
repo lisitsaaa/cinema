@@ -1,10 +1,12 @@
 package com.example.cinema.dto;
 
+import com.example.cinema.entity.user.Role;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.*;
+import java.util.Set;
 
 @Data
 @NoArgsConstructor @AllArgsConstructor
@@ -23,4 +25,6 @@ public class UserRegistrationDto {
     @NotNull
     @Min(value = 0)
     private int age;
+
+    private Set<Role> roles;
 }
