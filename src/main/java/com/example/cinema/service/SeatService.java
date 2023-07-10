@@ -38,7 +38,8 @@ public class SeatService implements AbstractService<Seat>{
     }
 
     @Override
-    public void update(Seat seat) {
+    public void update(Seat entity) {
+        Seat seat = findByHallAndRowAndSeat(entity.getHall(), entity.getRow(), entity.getSeat());
         seatRepository.update(seat.getId(), seat.getSeatStatus());
     }
 
@@ -54,9 +55,5 @@ public class SeatService implements AbstractService<Seat>{
     @Transactional(readOnly = true)
     public List<Seat> findByHall(Hall hall){
         return seatRepository.findByHall(hall);
-    }
-
-    public void updateSeatStatus(long id, SeatStatus seatStatus){
-        seatRepository.update(id, seatStatus);
     }
 }
