@@ -9,6 +9,7 @@ import com.example.cinema.service.MovieSessionService;
 import com.example.cinema.service.OrderService;
 import com.example.cinema.service.SeatService;
 import com.example.cinema.service.UserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -25,18 +26,12 @@ import static org.springframework.http.ResponseEntity.ok;
 
 @RestController
 @RequestMapping("/order")
+@RequiredArgsConstructor
 public class OrderController {
-    @Autowired
-    private OrderService orderService;
-
-    @Autowired
-    private SeatService seatService;
-
-    @Autowired
-    private MovieSessionService movieSessionService;
-
-    @Autowired
-    private UserService userService;
+    private final OrderService orderService;
+    private final SeatService seatService;
+    private final MovieSessionService movieSessionService;
+    private final UserService userService;
 
     @PostMapping("/{movie_session_id}")
     public ResponseEntity<Order> create(@RequestBody @Valid SeatDto seatDto,
@@ -61,6 +56,5 @@ public class OrderController {
         dto.setMovieSession(movieSession);
         dto.setSeat(seat);
         return dto;
-
     }
 }
