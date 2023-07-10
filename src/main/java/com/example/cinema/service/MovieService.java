@@ -10,13 +10,38 @@ import java.util.Optional;
 
 @Service
 @Transactional
-public class MovieService {
+public class MovieService implements AbstractService<Movie>{
     @Autowired
     private MovieRepository movieRepository;
 
+    @Override
     public Movie save(Movie movie){
         return movieRepository.save(movie);
     }
+
+    @Override
+    public void remove(long id) {
+        movieRepository.deleteById(id);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Movie findById(long id) {
+        Optional<Movie> movie = movieRepository.findById(id);
+        if (movie.isPresent()) {
+            return movie.get();
+        }
+        throw new RuntimeException("incorrect id");
+    }
+
+    @Override
+    public void update(Movie movie) {
+        movieRepository.update(movie.getId(), movie.getName(),
+                movie.getImage(), movie.getDuration(),
+                movie.getReleaseYear(), movie.getDescription(),
+                movie.getAgeLimit(), movie.getGenres(), movie.getType());
+    }
+
 
     @Transactional(readOnly = true)
     public Movie findByName(String name){
