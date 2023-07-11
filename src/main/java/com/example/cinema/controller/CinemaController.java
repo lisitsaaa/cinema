@@ -32,14 +32,14 @@ public class CinemaController {
     }
 
     @PostMapping("/update/{id}")
-    public ResponseEntity<Cinema> update(@RequestBody @Valid CinemaDto dto,
+    public ResponseEntity<Cinema> update(@RequestBody @Valid Cinema cinema,
                                          BindingResult bindingResult,
                                          @PathVariable long id) {
         if (!getValidationResult(bindingResult)) {
             return badRequest().build();
         }
         Cinema cinemaById = cinemaService.findById(id);
-        cinemaById.setName(dto.getName());
+        cinemaById.setName(cinema.getName());
         cinemaService.update(cinemaById);
         return ok(cinemaById);
     }
