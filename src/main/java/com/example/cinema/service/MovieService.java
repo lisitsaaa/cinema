@@ -1,6 +1,7 @@
 package com.example.cinema.service;
 
 import com.example.cinema.entity.cinema.movie.Movie;
+import com.example.cinema.exception.NotFoundException;
 import com.example.cinema.repository.MovieRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,7 +33,7 @@ public class MovieService implements AbstractService<Movie>{
         if (movie.isPresent()) {
             return movie.get();
         }
-        throw new RuntimeException("incorrect id");
+        throw new NotFoundException(String.format("Movie with id = %s not found", id));
     }
 
     public void update(Movie movie) {
@@ -52,6 +53,6 @@ public class MovieService implements AbstractService<Movie>{
         if (byName.isPresent()) {
             return byName.get();
         }
-        throw new RuntimeException("incorrect name");
+        throw new NotFoundException(String.format("Movie with name - %s not found", name));
     }
 }

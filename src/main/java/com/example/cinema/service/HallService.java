@@ -3,6 +3,7 @@ package com.example.cinema.service;
 import com.example.cinema.entity.cinema.Cinema;
 import com.example.cinema.entity.cinema.Hall;
 import com.example.cinema.entity.cinema.seat.Seat;
+import com.example.cinema.exception.NotFoundException;
 import com.example.cinema.repository.HallRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -40,7 +41,7 @@ public class HallService implements AbstractService<Hall> {
                             .thenComparing(Seat::getSeat));
             return hall;
         }
-        throw new RuntimeException("incorrect id");
+        throw new NotFoundException(String.format("Hall with id = %s not found", id));
     }
 
     public void update(Hall hall) {
@@ -49,7 +50,11 @@ public class HallService implements AbstractService<Hall> {
 
     @Transactional(readOnly = true)
     public List<Hall> findAllByCinema(Cinema cinema){
-        return hallRepository.findByCinema(cinema);
+        List<Hall> halls = hallRepository.findByCinema(cinema);
+        if (halls.isEmpty()) {
+            throw new NotFoundException(String.format("Hall with cinema's name - %s not found", cinema.getName()));
+        }
+        return halls;
     }
 
     @Transactional(readOnly = true)
@@ -58,6 +63,6 @@ public class HallService implements AbstractService<Hall> {
         if (byName.isPresent()) {
             return byName.get();
         }
-        throw new RuntimeException("incorrect name");
+        throw new NotFoundException(String.format("Hall with name - %s not found", name));
     }
 }

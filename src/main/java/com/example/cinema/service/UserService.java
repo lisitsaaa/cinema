@@ -1,6 +1,7 @@
 package com.example.cinema.service;
 
 import com.example.cinema.entity.user.User;
+import com.example.cinema.exception.NotFoundException;
 import com.example.cinema.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -38,7 +39,7 @@ public class UserService implements UserDetailsService, AbstractService<User> {
         if (user.isPresent()) {
             return user.get();
         }
-        throw new RuntimeException("incorrect id");
+        throw new NotFoundException(String.format("User with id - %s not found", id));
     }
 
     public void updatePassword(User user){
@@ -56,7 +57,7 @@ public class UserService implements UserDetailsService, AbstractService<User> {
         if (byUsername.isPresent()) {
             return byUsername.get();
         }
-        throw new RuntimeException("User not found");
+        throw new NotFoundException(String.format("Seat with username - %s not found", username));
     }
 
     public User login(User user){
@@ -73,6 +74,6 @@ public class UserService implements UserDetailsService, AbstractService<User> {
         if (byUsername.isPresent()) {
             return byUsername.get();
         }
-        throw new RuntimeException("User not found!"); //exception
+        throw new NotFoundException(String.format("Seat with username - %s not found", username));
     }
 }

@@ -3,6 +3,7 @@ package com.example.cinema.service;
 import com.example.cinema.dto.SeatDto;
 import com.example.cinema.entity.cinema.Hall;
 import com.example.cinema.entity.cinema.seat.Seat;
+import com.example.cinema.exception.NotFoundException;
 import com.example.cinema.repository.SeatRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,7 +35,7 @@ public class SeatService implements AbstractService<Seat>{
         if (byId.isPresent()) {
             return byId.get();
         }
-        throw new RuntimeException("try again:)");
+        throw new NotFoundException(String.format("Seat with id - %s not found", id));
     }
 
     public Seat updateSeatStatus(Hall hall, SeatDto dto){
@@ -49,6 +50,8 @@ public class SeatService implements AbstractService<Seat>{
         if (byHallAndRowAndSeat.isPresent()) {
             return byHallAndRowAndSeat.get();
         }
-        throw new RuntimeException("incorrect data");
+        throw new NotFoundException(String.format("MovieSession with hall - %s, row - %s and seat - %s not found",
+                hall.getName(), row, seat));
+
     }
 }
