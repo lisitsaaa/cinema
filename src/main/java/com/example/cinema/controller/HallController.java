@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static com.example.cinema.controller.util.Validator.getValidationResult;
 import static com.example.cinema.mapper.HallMapper.INSTANCE;
 import static org.springframework.http.ResponseEntity.badRequest;
@@ -24,18 +27,46 @@ public class HallController {
     private final CinemaService cinemaService;
 
     @PostMapping("/{cinema_id}")
-    public ResponseEntity<Hall> create(@PathVariable long cinema_id,
+    public ResponseEntity<HallDto> create(@PathVariable long cinema_id,
                                        @RequestBody @Valid HallDto dto,
                                        BindingResult bindingResult) {
         if (!getValidationResult(bindingResult)) {
             return badRequest().build();
         }
         dto.setCinema(cinemaService.findById(cinema_id));
-        return ok(hallService.save(INSTANCE.dtoToHall(dto)));
+        return ok(INSTANCE.hallToDto(hallService.save(INSTANCE.dtoToHall(dto))));
     }
 
-    @GetMapping("/id")
-    public ResponseEntity<Hall> findById(@PathVariable long id) {
-        return ok(hallService.findById(id));
+    @PostMapping("/update/{id}")
+    public ResponseEntity<HallDto> update(@PathVariable long id,
+                                          @RequestBody @Valid Hall hall,
+                                          BindingResult bindingResult){
+        if (!getValidationResult(bindingResult)) {
+            return badRequest().build();
+        }
+        Hall hallById = hallService.findById(id);
+        hallById.setName(hall.getName());
+        hallService.update(hallById);
+
+        return ok(INSTANCE.hallToDto(hallById));
+    }
+
+    @DeleteMapping("{id}")
+    public void remove(@PathVariable long id){
+        hallService.remove(id);
+    }
+
+    @GetMapping("/find-by-cinema/{cinema_name}")
+    public List<HallDto> getByCinema(@PathVariable String cinema_name){
+        List<HallDto> hallDtoList = new ArrayList<>();
+        hallService.findAllByCinema(cinemaService.findByName(cinema_name))
+                .forEach(hall -> hallDtoList.add(INSTANCE.hallToDto(hall)));
+
+        return hallDtoList;
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<HallDto> getById(@PathVariable long id) {
+        return ok(INSTANCE.hallToDto(hallService.findById(id)));
     }
 }

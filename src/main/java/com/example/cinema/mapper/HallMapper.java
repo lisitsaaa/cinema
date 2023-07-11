@@ -10,4 +10,5 @@ public interface HallMapper {
     HallMapper INSTANCE = Mappers.getMapper(HallMapper.class);
 
     Hall dtoToHall(HallDto dto);
+    HallDto hallToDto(Hall entity);
 }
