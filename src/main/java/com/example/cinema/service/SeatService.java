@@ -3,7 +3,6 @@ package com.example.cinema.service;
 import com.example.cinema.dto.SeatDto;
 import com.example.cinema.entity.cinema.Hall;
 import com.example.cinema.entity.cinema.seat.Seat;
-import com.example.cinema.entity.cinema.seat.SeatStatus;
 import com.example.cinema.repository.SeatRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,7 +24,7 @@ public class SeatService implements AbstractService<Seat>{
 
     @Override
     public void remove(long id) {
-        seatRepository.deleteById(id);
+        seatRepository.delete(findById(id));
     }
 
     @Override
@@ -36,12 +35,6 @@ public class SeatService implements AbstractService<Seat>{
             return byId.get();
         }
         throw new RuntimeException("try again:)");
-    }
-
-    @Override
-    public void update(Seat entity) {
-//        Seat seat = findByHallAndRowAndSeat(entity.getHall(), entity.getRow(), entity.getSeat());
-//        seatRepository.update(seat.getId(), entity.getSeatStatus());
     }
 
     public Seat updateSeatStatus(Hall hall, SeatDto dto){
@@ -57,10 +50,5 @@ public class SeatService implements AbstractService<Seat>{
             return byHallAndRowAndSeat.get();
         }
         throw new RuntimeException("incorrect data");
-    }
-
-    @Transactional(readOnly = true)
-    public List<Seat> findByHall(Hall hall){
-        return seatRepository.findByHall(hall);
     }
 }
