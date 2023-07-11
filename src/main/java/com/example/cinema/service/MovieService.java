@@ -22,7 +22,7 @@ public class MovieService implements AbstractService<Movie>{
 
     @Override
     public void remove(long id) {
-        movieRepository.deleteById(id);
+        movieRepository.delete(findById(id));
     }
 
     @Override
@@ -35,12 +35,10 @@ public class MovieService implements AbstractService<Movie>{
         throw new RuntimeException("incorrect id");
     }
 
-    @Override
     public void update(Movie movie) {
-//        movieRepository.update(movie.getId(), movie.getName(),
-//                movie.getImage(), movie.getDuration(),
-//                movie.getReleaseYear(), movie.getDescription(),
-//                movie.getAgeLimit(), movie.getGenres(), movie.getType());
+        movieRepository.update(movie.getId(), movie.getName(),
+                movie.getDescription(), movie.getImage(),
+                movie.getDuration(), movie.getReleaseYear());
     }
 
     @Transactional(readOnly = true)

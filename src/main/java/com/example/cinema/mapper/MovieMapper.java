@@ -10,4 +10,5 @@ public interface MovieMapper {
     MovieMapper INSTANCE = Mappers.getMapper(MovieMapper.class);
 
     Movie dtoToMovie(MovieDto dto);
+    MovieDto movieToDto(Movie entity);
 }
