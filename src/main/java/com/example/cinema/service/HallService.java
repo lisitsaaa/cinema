@@ -43,7 +43,6 @@ public class HallService implements AbstractService<Hall> {
         throw new RuntimeException("incorrect id");
     }
 
-    @Override
     public void update(Hall hall) {
         hallRepository.update(hall.getId(), hall.getName());
     }
