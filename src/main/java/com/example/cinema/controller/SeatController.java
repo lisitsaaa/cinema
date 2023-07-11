@@ -5,7 +5,6 @@ import com.example.cinema.entity.cinema.seat.Seat;
 import com.example.cinema.service.HallService;
 import com.example.cinema.service.SeatService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -35,4 +34,8 @@ public class SeatController {
         return ok(seatService.save(INSTANCE.dtoToSeat(dto)));
     }
 
+    @DeleteMapping("/{id}")
+    public void remove(@PathVariable long id){
+        seatService.remove(id);
+    }
 }
