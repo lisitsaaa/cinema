@@ -26,7 +26,7 @@ public class HallService implements AbstractService<Hall> {
 
     @Override
     public void remove(long id) {
-        hallRepository.deleteById(id);
+        hallRepository.delete(findById(id));
     }
 
     @Override
@@ -45,7 +45,7 @@ public class HallService implements AbstractService<Hall> {
 
     @Override
     public void update(Hall hall) {
-//        hallRepository.update(hall.getId(), hall.getName());
+        hallRepository.update(hall.getId(), hall.getName());
     }
 
     @Transactional(readOnly = true)
