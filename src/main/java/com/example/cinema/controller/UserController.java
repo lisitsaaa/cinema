@@ -30,13 +30,13 @@ public class UserController {
     private final JWTTokenProvider jwtTokenProvider;
 
     @PostMapping
-    public ResponseEntity<User> registration(@RequestBody @Valid UserDto regDto,
+    public ResponseEntity<UserDto> registration(@RequestBody @Valid UserDto regDto,
                                              BindingResult bindingResult){
         if (!getValidationResult(bindingResult)) {
             return badRequest().build();
         }
         regDto.setRoles(Set.of(Role.USER));
-        return ok(userService.save(INSTANCE.dtoToUser(regDto)));
+        return ok(INSTANCE.userToDto(userService.save(INSTANCE.dtoToUser(regDto))));
     }
 
     @PostMapping("/login")
