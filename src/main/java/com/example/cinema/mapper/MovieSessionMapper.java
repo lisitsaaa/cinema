@@ -10,4 +10,6 @@ public interface MovieSessionMapper {
     MovieSessionMapper INSTANCE = Mappers.getMapper(MovieSessionMapper.class);
 
     MovieSession dtoToMovieSession(MovieSessionDto dto);
+
+    MovieSessionDto movieSessionToDto(MovieSession entity);
 }

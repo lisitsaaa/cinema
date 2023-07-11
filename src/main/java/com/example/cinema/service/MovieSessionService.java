@@ -25,7 +25,7 @@ public class MovieSessionService implements AbstractService<MovieSession>{
 
     @Override
     public void remove(long id) {
-        movieSessionRepository.deleteById(id);
+        movieSessionRepository.delete(findById(id));
     }
 
     @Override
@@ -38,25 +38,23 @@ public class MovieSessionService implements AbstractService<MovieSession>{
         throw new RuntimeException("incorrect id");
     }
 
-    @Override
     public void update(MovieSession movieSession) {
-//        movieSessionRepository.update(movieSession.getId(),
-//                movieSession.getDate(), movieSession.getStartedTime(),
-//                movieSession.getPrice(), movieSession.getHall());
+        movieSessionRepository.update(movieSession.getId(), movieSession.getDate(),
+                movieSession.getStartedTime(), movieSession.getPrice(), movieSession.getHall());
     }
 
     @Transactional(readOnly = true)
-    public List<MovieSession> findByDate(LocalDate date){
+    public List<MovieSession> findAllByDate(LocalDate date){
         return movieSessionRepository.findByDate(date);
     }
 
     @Transactional(readOnly = true)
-    public List<MovieSession> findByCinema(Cinema cinema){
+    public List<MovieSession> findAllByCinema(Cinema cinema){
         return movieSessionRepository.findByCinema(cinema);
     }
 
     @Transactional(readOnly = true)
-    public List<MovieSession> findByMovie(Movie movie){
+    public List<MovieSession> findAllByMovie(Movie movie){
         return movieSessionRepository.findByMovie(movie);
     }
 }

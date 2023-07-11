@@ -1,6 +1,7 @@
 package com.example.cinema.controller;
 
 import com.example.cinema.dto.MovieSessionDto;
+import com.example.cinema.entity.cinema.Hall;
 import com.example.cinema.entity.cinema.MovieSession;
 import com.example.cinema.service.CinemaService;
 import com.example.cinema.service.HallService;
@@ -12,6 +13,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.example.cinema.controller.util.Validator.getValidationResult;
 import static com.example.cinema.mapper.MovieSessionMapper.INSTANCE;
@@ -28,8 +32,8 @@ public class MovieSessionController {
     private final MovieService movieService;
 
     @PostMapping
-    public ResponseEntity<MovieSession> create(@RequestBody @Valid MovieSessionDto dto,
-                                               BindingResult bindingResult) {
+    public ResponseEntity<MovieSessionDto> create(@RequestBody @Valid MovieSessionDto dto,
+                                                  BindingResult bindingResult) {
         if (!getValidationResult(bindingResult)) {
             return badRequest().build();
         }
@@ -37,11 +41,79 @@ public class MovieSessionController {
         dto.setCinema(cinemaService.findByName(dto.getCinemaName()));
         dto.setHall(hallService.findByName(dto.getHallName()));
 
-        return ok(movieSessionService.save(INSTANCE.dtoToMovieSession(dto)));
+        return ok(INSTANCE.movieSessionToDto(movieSessionService.save(INSTANCE.dtoToMovieSession(dto))));
+    }
+
+    @DeleteMapping("/{id}")
+    public void remove(@PathVariable long id) {
+        movieSessionService.remove(id);
     }
 
     @GetMapping("/{id}")
-    public MovieSession findById(@PathVariable long id) {
-        return movieSessionService.findById(id);
+    public ResponseEntity<MovieSessionDto> getById(@PathVariable long id) {
+        return ok(INSTANCE.movieSessionToDto(movieSessionService.findById(id)));
+    }
+
+    @PostMapping("/find-by-movie")
+    public ResponseEntity<List<MovieSessionDto>> getAllByMovie(@RequestBody @Valid MovieSessionDto dto,
+                                                               BindingResult bindingResult) {
+        if (!getValidationResult(bindingResult)) {
+            return badRequest().build();
+        }
+        List<MovieSessionDto> movieSessionDtoList = new ArrayList<>();
+        movieSessionService.findAllByMovie(movieService.findByName(dto.getMovieName()))
+                .forEach(movieSession -> movieSessionDtoList.add(INSTANCE.movieSessionToDto(movieSession)));
+
+        return ok(movieSessionDtoList);
+    }
+
+    @PostMapping("/find-by-cinema")
+    public ResponseEntity<List<MovieSessionDto>> getAllByCinema(@RequestBody @Valid MovieSessionDto dto,
+                                                             BindingResult bindingResult) {
+        if (!getValidationResult(bindingResult)) {
+            return badRequest().build();
+        }
+        List<MovieSessionDto> movieSessionDtoList = new ArrayList<>();
+        movieSessionService.findAllByCinema(cinemaService.findByName(dto.getMovieName()))
+                .forEach(movieSession -> movieSessionDtoList.add(INSTANCE.movieSessionToDto(movieSession)));
+
+        return ok(movieSessionDtoList);
+    }
+
+    @PostMapping("/find-by-date")
+    public ResponseEntity<List<MovieSessionDto>> getAllByDate(@RequestBody @Valid MovieSessionDto dto,
+                                                           BindingResult bindingResult) {
+        if (!getValidationResult(bindingResult)) {
+            return badRequest().build();
+        }
+        List<MovieSessionDto> movieSessionDtoList = new ArrayList<>();
+        movieSessionService.findAllByDate(dto.getDate())
+                .forEach(movieSession -> movieSessionDtoList.add(INSTANCE.movieSessionToDto(movieSession)));
+
+        return ok(movieSessionDtoList);
+    }
+
+    @PostMapping("/update/{id}")
+    public ResponseEntity<MovieSessionDto> update(@PathVariable long id,
+                                                  @RequestBody @Valid MovieSession movieSession,
+                                                  BindingResult bindingResult){
+        if (!getValidationResult(bindingResult)) {
+            return badRequest().build();
+        }
+        MovieSession movieSessionById = movieSessionService.findById(id);
+        if (!String.valueOf(movieSession.getDate()).isEmpty()) {
+            movieSessionById.setDate(movieSession.getDate());
+        }
+        if (!String.valueOf(movieSession.getStartedTime()).isEmpty()) {
+            movieSessionById.setStartedTime(movieSession.getStartedTime());
+        }
+        if (!String.valueOf(movieSession.getPrice()).isEmpty()) {
+            movieSessionById.setPrice(movieSession.getPrice());
+        }
+        if (!movieSession.getHallName().isEmpty()) {
+            movieSessionById.setHall(hallService.findByName(movieSessionById.getHallName()));
+        }
+        movieSessionService.update(movieSessionById);
+        return ok(INSTANCE.movieSessionToDto(movieSessionById));
     }
 }
