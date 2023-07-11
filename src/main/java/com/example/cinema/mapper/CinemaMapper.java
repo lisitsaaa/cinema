@@ -10,4 +10,5 @@ public interface CinemaMapper {
     CinemaMapper INSTANCE = Mappers.getMapper(CinemaMapper.class);
 
     Cinema dtoToUser(CinemaDto dto);
+    CinemaDto cinemaToDto(Cinema entity);
 }

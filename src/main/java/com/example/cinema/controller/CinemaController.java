@@ -9,6 +9,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.example.cinema.controller.util.Validator.getValidationResult;
@@ -23,16 +24,16 @@ public class CinemaController {
     private final CinemaService cinemaService;
 
     @PostMapping
-    public ResponseEntity<Cinema> create(@RequestBody @Valid CinemaDto dto,
+    public ResponseEntity<CinemaDto> create(@RequestBody @Valid CinemaDto dto,
                                          BindingResult bindingResult) {
         if (!getValidationResult(bindingResult)) {
             return badRequest().build();
         }
-        return ok(cinemaService.save(INSTANCE.dtoToUser(dto)));
+        return ok(INSTANCE.cinemaToDto(cinemaService.save(INSTANCE.dtoToUser(dto))));
     }
 
     @PostMapping("/update/{id}")
-    public ResponseEntity<Cinema> update(@RequestBody @Valid Cinema cinema,
+    public ResponseEntity<CinemaDto> update(@RequestBody @Valid Cinema cinema,
                                          BindingResult bindingResult,
                                          @PathVariable long id) {
         if (!getValidationResult(bindingResult)) {
@@ -41,7 +42,7 @@ public class CinemaController {
         Cinema cinemaById = cinemaService.findById(id);
         cinemaById.setName(cinema.getName());
         cinemaService.update(cinemaById);
-        return ok(cinemaById);
+        return ok(INSTANCE.cinemaToDto(cinemaById));
     }
 
     @DeleteMapping("/{id}")
@@ -50,17 +51,21 @@ public class CinemaController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Cinema> getById(@PathVariable long id) {
-        return ok(cinemaService.findById(id));
+    public ResponseEntity<CinemaDto> getById(@PathVariable long id) {
+        return ok(INSTANCE.cinemaToDto(cinemaService.findById(id)));
     }
 
     @GetMapping("/find-by-city/{city}")
-    public ResponseEntity<List<Cinema>> getByCity(@PathVariable String city) {
-        return ok(cinemaService.findByCity(city));
+    public ResponseEntity<List<CinemaDto>> getAllByCity(@PathVariable String city) {
+        List<CinemaDto> cinemaDtoList = new ArrayList<>();
+        cinemaService.findByCity(city)
+                .forEach(cinema -> cinemaDtoList.add(INSTANCE.cinemaToDto(cinema)));
+
+        return ok(cinemaDtoList);
     }
 
     @GetMapping("/find-by-name/{name}")
-    public ResponseEntity<Cinema> getByName(@PathVariable String name) {
-        return ok(cinemaService.findByName(name));
+    public ResponseEntity<CinemaDto> getByName(@PathVariable String name) {
+        return ok(INSTANCE.cinemaToDto(cinemaService.findByName(name)));
     }
 }
