@@ -3,41 +3,69 @@ package com.example.cinema.controller;
 import com.example.cinema.dto.CinemaDto;
 import com.example.cinema.entity.cinema.Cinema;
 import com.example.cinema.service.CinemaService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.List;
 
-import static com.example.cinema.controller.util.Validator.*;
+import static com.example.cinema.controller.util.Validator.getValidationResult;
+import static com.example.cinema.mapper.CinemaMapper.INSTANCE;
 import static org.springframework.http.ResponseEntity.badRequest;
 import static org.springframework.http.ResponseEntity.ok;
 
 @RestController
 @RequestMapping("/cinema")
+@RequiredArgsConstructor
 public class CinemaController {
-    @Autowired
-    private CinemaService cinemaService;
+    private final CinemaService cinemaService;
 
     @PostMapping
-    public ResponseEntity<Cinema> create(@RequestBody @Valid CinemaDto dto,
-                                         BindingResult bindingResult){
-        if(!getValidationResult(bindingResult)){
+    public ResponseEntity<CinemaDto> create(@RequestBody @Valid CinemaDto dto,
+                                         BindingResult bindingResult) {
+        if (!getValidationResult(bindingResult)) {
             return badRequest().build();
         }
-        return ok(cinemaService.save(buildCinema(dto)));
+        return ok(INSTANCE.cinemaToDto(cinemaService.save(INSTANCE.dtoToUser(dto))));
     }
 
-    private Cinema buildCinema(CinemaDto dto){
-        return Cinema.builder()
-                .name(dto.getName())
-                .city(dto.getCity())
-                .build();
+    @PostMapping("/update/{id}")
+    public ResponseEntity<CinemaDto> update(@RequestBody @Valid Cinema cinema,
+                                         BindingResult bindingResult,
+                                         @PathVariable long id) {
+        if (!getValidationResult(bindingResult)) {
+            return badRequest().build();
+        }
+        Cinema cinemaById = cinemaService.findById(id);
+        cinemaById.setName(cinema.getName());
+        cinemaService.update(cinemaById);
+        return ok(INSTANCE.cinemaToDto(cinemaById));
+    }
+
+    @DeleteMapping("/{id}")
+    public void remove(@PathVariable long id) {
+        cinemaService.remove(id);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Cinema> findById(@PathVariable long id){
-        return ok(cinemaService.findById(id));
+    public ResponseEntity<CinemaDto> getById(@PathVariable long id) {
+        return ok(INSTANCE.cinemaToDto(cinemaService.findById(id)));
+    }
+
+    @GetMapping("/find-by-city/{city}")
+    public ResponseEntity<List<CinemaDto>> getAllByCity(@PathVariable String city) {
+        List<CinemaDto> cinemaDtoList = new ArrayList<>();
+        cinemaService.findByCity(city)
+                .forEach(cinema -> cinemaDtoList.add(INSTANCE.cinemaToDto(cinema)));
+
+        return ok(cinemaDtoList);
+    }
+
+    @GetMapping("/find-by-name/{name}")
+    public ResponseEntity<CinemaDto> getByName(@PathVariable String name) {
+        return ok(INSTANCE.cinemaToDto(cinemaService.findByName(name)));
     }
 }

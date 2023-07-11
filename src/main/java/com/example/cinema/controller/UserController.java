@@ -1,73 +1,88 @@
 package com.example.cinema.controller;
 
-import com.example.cinema.dto.UserAuthorizationDto;
-import com.example.cinema.dto.UserRegistrationDto;
-import com.example.cinema.entity.user.Role;
-import com.example.cinema.entity.user.Telephone;
-import com.example.cinema.entity.user.User;
 import com.example.cinema.configuration.jwt.JWTTokenProvider;
+import com.example.cinema.dto.UserAuthorizationDto;
+import com.example.cinema.dto.UserDto;
+import com.example.cinema.entity.user.Role;
+import com.example.cinema.entity.user.User;
 import com.example.cinema.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.Set;
 
-import static com.example.cinema.controller.util.Validator.*;
+import static com.example.cinema.controller.util.Validator.getValidationResult;
+import static com.example.cinema.mapper.UserAuthorizationMapper.AUTH_INSTANCE;
+import static com.example.cinema.mapper.UserMapper.INSTANCE;
 import static org.springframework.http.ResponseEntity.badRequest;
 import static org.springframework.http.ResponseEntity.ok;
 
 @RestController
 @RequestMapping("/user")
+@RequiredArgsConstructor
 public class UserController {
-    @Autowired
-    private UserService userService;
-
-    @Autowired
-    private JWTTokenProvider jwtTokenProvider;
+    private final UserService userService;
+    private final JWTTokenProvider jwtTokenProvider;
 
     @PostMapping
-    public ResponseEntity<User> registration(@RequestBody @Valid UserRegistrationDto regDto,
+    public ResponseEntity<UserDto> registration(@RequestBody @Valid UserDto regDto,
                                              BindingResult bindingResult){
         if (!getValidationResult(bindingResult)) {
             return badRequest().build();
         }
-        return ok(userService.save(buildRegistrationUser(regDto)));
+        regDto.setRoles(Set.of(Role.USER));
+        return ok(INSTANCE.userToDto(userService.save(INSTANCE.dtoToUser(regDto))));
     }
 
     @PostMapping("/login")
     public ResponseEntity<String> authorization(@RequestBody @Valid UserAuthorizationDto authDto,
-                                              BindingResult bindingResult){
+                                                BindingResult bindingResult){
         if (getValidationResult(bindingResult)) {
-            User login = userService.login(buildAuthorizationUser(authDto));
+            User login = userService.login(AUTH_INSTANCE.dtoToUser(authDto));
             String token = jwtTokenProvider.generateToken(login.getUsername(), login.getRoles());
             return ok(token);
         }
         return badRequest().body("Invalid information");
     }
 
-    private User buildAuthorizationUser(UserAuthorizationDto authDto){
-        return User.builder()
-                .username(authDto.getUsername())
-                .password(authDto.getPassword())
-                .build();
+    @DeleteMapping("/{id}")
+    public void remove(@PathVariable long id){
+        userService.remove(id);
     }
 
-    private User buildRegistrationUser(UserRegistrationDto regDto){
-        return User.builder()
-                .firstName(regDto.getFirstName())
-                .lastName(regDto.getLastName())
-                .username(regDto.getUsername())
-                .password(regDto.getPassword())
-                .email(regDto.getEmail())
-                .age(regDto.getAge())
-                .telephone(Telephone.builder()
-                        .code(regDto.getCode())
-                        .number(regDto.getNumber())
-                        .build())
-                .roles(Set.of(Role.USER))
-                .build();
+    @PostMapping("/update-password")
+    public ResponseEntity<UserDto> updatePassword(@AuthenticationPrincipal UserDetails userDetails,
+                                                  @RequestBody @Valid User user,
+                                                  BindingResult bindingResult){
+        if (!getValidationResult(bindingResult)) {
+            return badRequest().build();
+        }
+        User byUsername = userService.findByUsername(userDetails.getUsername());
+        byUsername.setPassword(user.getPassword());
+        userService.updatePassword(byUsername);
+        return ok(INSTANCE.userToDto(byUsername));
+    }
+
+    @PostMapping("/update")
+    public ResponseEntity<UserDto> updatePersonalInfo(@AuthenticationPrincipal UserDetails userDetails,
+                                       @RequestBody @Valid User user,
+                                       BindingResult bindingResult){
+        if (!getValidationResult(bindingResult)) {
+            return badRequest().build();
+        }
+        User byUsername = userService.findByUsername(userDetails.getUsername());
+        if (!user.getUsername().isEmpty()) {
+            byUsername.setUsername(user.getUsername());
+        }
+        if (!user.getEmail().isEmpty()) {
+            byUsername.setEmail(user.getEmail());
+        }
+        userService.update(byUsername);
+        return ok(INSTANCE.userToDto(byUsername));
     }
 }

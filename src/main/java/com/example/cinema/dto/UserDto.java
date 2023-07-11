@@ -1,20 +1,16 @@
 package com.example.cinema.dto;
 
+import com.example.cinema.entity.user.Role;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.*;
+import java.util.Set;
 
 @Data
 @NoArgsConstructor @AllArgsConstructor
-public class UserRegistrationDto {
-    @NotNull @NotEmpty @NotBlank
-    private String firstName;
-
-    @NotNull @NotEmpty @NotBlank
-    private String lastName;
-
+public class UserDto {
     @NotNull @NotEmpty @NotBlank
     private String username;
 
@@ -30,9 +26,5 @@ public class UserRegistrationDto {
     @Min(value = 0)
     private int age;
 
-    @NotNull @NotEmpty @NotBlank
-//    @Pattern(regexp = ) find validation for phone numbers
-    private String code;
-    @NotNull @NotEmpty @NotBlank
-    private String number;
+    private Set<Role> roles;
 }

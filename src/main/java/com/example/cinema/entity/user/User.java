@@ -6,6 +6,9 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.util.Collection;
 import java.util.Set;
 
@@ -14,15 +17,13 @@ import java.util.Set;
 @Setter @Getter
 @Builder @AllArgsConstructor @NoArgsConstructor
 public class User extends AbstractEntity implements UserDetails {
-    private String firstName;
-    private String lastName;
     private String username;
     private String email;
-    private String password;
     private int age;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    private Telephone telephone;
+    @NotNull @NotEmpty @NotBlank
+    private String password;
+
 
     @ElementCollection(fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)

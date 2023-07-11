@@ -14,7 +14,7 @@ import java.util.Optional;
 
 @Service
 @Transactional
-public class UserService implements UserDetailsService {
+public class UserService implements UserDetailsService, AbstractService<User> {
     @Autowired
     private UserRepository userRepository;
 
@@ -25,6 +25,29 @@ public class UserService implements UserDetailsService {
     public User save(User user){
         user.setPassword(passwordEncoder().encode(user.getPassword()));
         return userRepository.save(user);
+    }
+
+    @Override
+    public void remove(long id) {
+        userRepository.delete(findById(id));
+    }
+
+    @Override
+    public User findById(long id) {
+        Optional<User> user = userRepository.findById(id);
+        if (user.isPresent()) {
+            return user.get();
+        }
+        throw new RuntimeException("incorrect id");
+    }
+
+    public void updatePassword(User user){
+        user.setPassword(passwordEncoder().encode(user.getPassword()));
+        userRepository.updatePassword(user.getId(), user.getPassword());
+    }
+
+    public void update(User user) {
+        userRepository.updatePersonalInfo(user.getId(), user.getUsername(), user.getEmail());
     }
 
     @Transactional(readOnly = true)

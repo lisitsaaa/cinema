@@ -8,18 +8,30 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Comparator;
+import java.util.List;
 import java.util.Optional;
 
 @Service
 @Transactional
-public class CinemaService {
+public class CinemaService implements AbstractService<Cinema> {
     @Autowired
     private CinemaRepository cinemaRepository;
 
+    @Override
     public Cinema save(Cinema cinema) {
+        Optional<Cinema> byCityAndName = cinemaRepository.findByCityAndName(cinema.getCity(), cinema.getName());
+        if (byCityAndName.isPresent()) {
+            throw new RuntimeException("cinema's already had");
+        }
         return cinemaRepository.save(cinema);
     }
 
+    @Override
+    public void remove(long id) {
+        cinemaRepository.delete(findById(id));
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public Cinema findById(long id) {
         Optional<Cinema> byId = cinemaRepository.findById(id);
@@ -31,6 +43,15 @@ public class CinemaService {
             return cinema;
         }
         throw new RuntimeException("incorrect id");
+    }
+
+    public void update(Cinema cinema) {
+        cinemaRepository.update(cinema.getId(), cinema.getName());
+    }
+
+    @Transactional(readOnly = true)
+    public List<Cinema> findByCity(String city){
+        return cinemaRepository.findByCity(city);
     }
 
     @Transactional(readOnly = true)

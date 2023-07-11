@@ -1,34 +1,33 @@
 package com.example.cinema.service;
 
+import com.example.cinema.dto.SeatDto;
 import com.example.cinema.entity.cinema.Hall;
 import com.example.cinema.entity.cinema.seat.Seat;
-import com.example.cinema.entity.cinema.seat.SeatStatus;
 import com.example.cinema.repository.SeatRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
 @Transactional
-public class SeatService {
+public class SeatService implements AbstractService<Seat>{
     @Autowired
     private SeatRepository seatRepository;
 
+    @Override
     public Seat save(Seat seat){
         return seatRepository.save(seat);
     }
 
-    @Transactional(readOnly = true)
-    public Seat findByHallAndRowAndSeat(Hall hall, int row, int seat){
-        Optional<Seat> byHallAndRowAndSeat = seatRepository.findByHallAndRowAndSeat(hall, row, seat);
-        if (byHallAndRowAndSeat.isPresent()) {
-            return byHallAndRowAndSeat.get();
-        }
-        throw new RuntimeException("incorrect data");
+    @Override
+    public void remove(long id) {
+        seatRepository.delete(findById(id));
     }
 
+    @Override
     @Transactional(readOnly = true)
     public Seat findById(long id){
         Optional<Seat> byId = seatRepository.findById(id);
@@ -38,7 +37,18 @@ public class SeatService {
         throw new RuntimeException("try again:)");
     }
 
-    public void updateSeatStatus(long id, SeatStatus seatStatus){
-        seatRepository.update(id, seatStatus);
+    public Seat updateSeatStatus(Hall hall, SeatDto dto){
+        Seat seat = findByHallAndRowAndSeat(hall, dto.getRow(), dto.getSeat());
+        seatRepository.update(seat.getId(), dto.getSeatStatus());
+        return seat;
+    }
+
+    @Transactional(readOnly = true)
+    public Seat findByHallAndRowAndSeat(Hall hall, int row, int seat){
+        Optional<Seat> byHallAndRowAndSeat = seatRepository.findByHallAndRowAndSeat(hall, row, seat);
+        if (byHallAndRowAndSeat.isPresent()) {
+            return byHallAndRowAndSeat.get();
+        }
+        throw new RuntimeException("incorrect data");
     }
 }
