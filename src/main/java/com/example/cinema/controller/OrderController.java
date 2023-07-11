@@ -10,7 +10,6 @@ import com.example.cinema.service.OrderService;
 import com.example.cinema.service.SeatService;
 import com.example.cinema.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,6 +17,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 import static com.example.cinema.controller.util.Validator.getValidationResult;
 import static com.example.cinema.mapper.OrderMapper.INSTANCE;
@@ -56,5 +56,15 @@ public class OrderController {
         dto.setMovieSession(movieSession);
         dto.setSeat(seat);
         return dto;
+    }
+
+    @DeleteMapping("/{id}")
+    public void remove(@PathVariable long id){
+        orderService.remove(id);
+    }
+
+    @GetMapping("/find-by-user")
+    public ResponseEntity<List<Order>> getAllByUser(@AuthenticationPrincipal UserDetails userDetails){
+        return ok(orderService.findAllByUser(userService.findByUsername(userDetails.getUsername())));
     }
 }

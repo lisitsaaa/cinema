@@ -22,7 +22,7 @@ public class OrderService implements AbstractService<Order>{
 
     @Override
     public void remove(long id) {
-        orderRepository.deleteById(id);
+        orderRepository.delete(findById(id));
     }
 
     @Override

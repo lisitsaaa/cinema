@@ -13,8 +13,4 @@ import java.util.List;
 @Repository
 public interface OrderRepository extends JpaRepository<Order, Long> {
     List<Order> findAllByUser(User user);
-
-//    @Modifying
-//    @Query("update Order o set o.seat=: seat where o.id=:id")
-//    void update(long id, Seat seat);
 }
