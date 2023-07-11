@@ -31,7 +31,7 @@ public class OrderService implements AbstractService<Order>{
         return findById(id);
     }
 
-    @Override
+
     public void update(Order order) {
 //        orderRepository.update(order.getId(), order.getSeat());
     }
