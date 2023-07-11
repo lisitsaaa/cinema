@@ -1,4 +1,4 @@
-package com.example.cinema.controller;
+package com.example.cinema.controller.util;
 
 import com.example.cinema.exception.NotFoundException;
 import org.springframework.http.HttpStatus;

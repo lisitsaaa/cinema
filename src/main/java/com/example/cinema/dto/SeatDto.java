@@ -13,12 +13,12 @@ import javax.validation.constraints.NotNull;
 @Data
 @Setter @Getter
 public class SeatDto {
-    @NotNull
-    @Min(value = 0)
+    @NotNull @Min(value = 0)
     private int seat;
-    @NotNull
-    @Min(value = 0)
+
+    @NotNull @Min(value = 0)
     private int row;
+
     private SeatStatus seatStatus;
     private SeatType seatType;
     private Hall hall;

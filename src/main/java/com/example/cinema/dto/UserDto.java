@@ -22,8 +22,7 @@ public class UserDto {
     @Pattern(regexp = "^(?=\\d*)(?=[a-z]*)(?=[A-Z]*)(?=[\\W]*).{2,16}$")
     private String password;
 
-    @NotNull
-    @Min(value = 0)
+    @NotNull @Min(value = 0)
     private int age;
 
     private Set<Role> roles;
