@@ -29,7 +29,7 @@ public class UserService implements UserDetailsService, AbstractService<User> {
 
     @Override
     public void remove(long id) {
-        userRepository.deleteById(id);
+        userRepository.delete(findById(id));
     }
 
     @Override
@@ -41,10 +41,13 @@ public class UserService implements UserDetailsService, AbstractService<User> {
         throw new RuntimeException("incorrect id");
     }
 
-    @Override
-    public void update(User user) {
+    public void updatePassword(User user){
         user.setPassword(passwordEncoder().encode(user.getPassword()));
-        userRepository.update(user.getId(), user.getEmail(), user.getPassword(), user.getUsername(), user.getAge());
+        userRepository.updatePassword(user.getId(), user.getPassword());
+    }
+
+    public void update(User user) {
+        userRepository.updatePersonalInfo(user.getId(), user.getUsername(), user.getEmail());
     }
 
     @Transactional(readOnly = true)
