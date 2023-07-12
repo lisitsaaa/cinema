@@ -1,5 +1,6 @@
 package com.example.cinema.controller.util;
 
+import com.example.cinema.exception.InvalidDataException;
 import com.example.cinema.exception.NotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,5 +16,10 @@ public class ExceptionController extends ResponseEntityExceptionHandler {
     @ExceptionHandler({NotFoundException.class, EntityNotFoundException.class})
     public ResponseEntity<Object> notFoundException(NotFoundException e){
         return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(InvalidDataException.class)
+    public ResponseEntity<Object> invalidDataException(InvalidDataException e){
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
 }

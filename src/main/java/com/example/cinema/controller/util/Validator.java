@@ -1,21 +1,18 @@
 package com.example.cinema.controller.util;
 
+import com.example.cinema.exception.InvalidDataException;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public final class Validator {
-    public static boolean getValidationResult(BindingResult bindingResult){
+    public static void checkBindingResult(BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            Map<String, String > errors = new HashMap<>();
-            for(FieldError fieldError : bindingResult.getFieldErrors()){
-                errors.put(fieldError.getField(), fieldError.getDefaultMessage());
-            }
-            System.out.println(errors);
-            return false;
+            Map<String, String> errors = new HashMap<>();
+            bindingResult.getFieldErrors()
+                    .forEach(fieldError -> errors.put(fieldError.getField(), fieldError.getDefaultMessage()));
+            throw new InvalidDataException(String.valueOf(errors));
         }
-        return true;
     }
 }

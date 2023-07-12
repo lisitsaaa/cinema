@@ -11,9 +11,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
-import static com.example.cinema.controller.util.Validator.getValidationResult;
+import static com.example.cinema.controller.util.Validator.checkBindingResult;
 import static com.example.cinema.mapper.SeatMapper.INSTANCE;
-import static org.springframework.http.ResponseEntity.badRequest;
 import static org.springframework.http.ResponseEntity.ok;
 
 @RestController
@@ -27,15 +26,13 @@ public class SeatController {
     public ResponseEntity<Seat> save(@PathVariable long hall_id,
                                      @RequestBody @Valid SeatDto dto,
                                      BindingResult bindingResult) {
-        if (!getValidationResult(bindingResult)) {
-            return badRequest().build();
-        }
+        checkBindingResult(bindingResult);
         dto.setHall(hallService.findById(hall_id));
         return ok(seatService.save(INSTANCE.dtoToSeat(dto)));
     }
 
     @DeleteMapping("/{id}")
-    public void remove(@PathVariable long id){
+    public void remove(@PathVariable long id) {
         seatService.remove(id);
     }
 }

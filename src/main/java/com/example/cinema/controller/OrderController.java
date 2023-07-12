@@ -19,9 +19,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
-import static com.example.cinema.controller.util.Validator.getValidationResult;
+import static com.example.cinema.controller.util.Validator.checkBindingResult;
 import static com.example.cinema.mapper.OrderMapper.INSTANCE;
-import static org.springframework.http.ResponseEntity.badRequest;
 import static org.springframework.http.ResponseEntity.ok;
 
 @RestController
@@ -38,15 +37,13 @@ public class OrderController {
                                         BindingResult bindingResult,
                                         @PathVariable long movie_session_id,
                                         @AuthenticationPrincipal UserDetails userDetails) {
-        if (!getValidationResult(bindingResult)) {
-            return badRequest().build();
-        }
+        checkBindingResult(bindingResult);
         return ok(orderService.save(INSTANCE.dtoToOrder(getOrderDto(userDetails, movie_session_id, seatDto))));
     }
 
     private OrderDto getOrderDto(UserDetails userDetails,
                                  long movie_session_id,
-                                 SeatDto seatDto){
+                                 SeatDto seatDto) {
         MovieSession movieSession = movieSessionService.findById(movie_session_id);
         Seat seat = seatService.updateSeatStatus(movieSession.getHall(), seatDto);
         seat.setSeatStatus(seatDto.getSeatStatus());
@@ -59,12 +56,12 @@ public class OrderController {
     }
 
     @DeleteMapping("/{id}")
-    public void remove(@PathVariable long id){
+    public void remove(@PathVariable long id) {
         orderService.remove(id);
     }
 
     @GetMapping("/find-by-user")
-    public ResponseEntity<List<Order>> getAllByUser(@AuthenticationPrincipal UserDetails userDetails){
+    public ResponseEntity<List<Order>> getAllByUser(@AuthenticationPrincipal UserDetails userDetails) {
         return ok(orderService.findAllByUser(userService.findByUsername(userDetails.getUsername())));
     }
 }
