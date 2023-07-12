@@ -58,8 +58,8 @@ public class HallController {
         return hallDtoList;
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<HallDto> getById(@PathVariable long id) {
-        return ok(INSTANCE.hallToDto(hallService.findById(id)));
-    }
+//    @GetMapping("/{id}")
+//    public ResponseEntity<HallDto> getById(@PathVariable long id) {
+//        return ok(INSTANCE.hallToDto(hallService.findById(id)));
+//    }
 }
