@@ -32,7 +32,6 @@ public class UserController {
     public ResponseEntity<UserDto> registration(@RequestBody @Valid UserDto regDto,
                                                 BindingResult bindingResult) {
         checkBindingResult(bindingResult);
-        regDto.setRoles(Set.of(Role.USER));
         return ok(INSTANCE.userToDto(userService.save(INSTANCE.dtoToUser(regDto))));
     }
 
