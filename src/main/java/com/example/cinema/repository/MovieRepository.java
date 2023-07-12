@@ -17,6 +17,8 @@ import java.util.Optional;
 public interface MovieRepository extends JpaRepository<Movie, Long> {
     Optional<Movie> findByName(String name);
 
+    Optional<Movie> findByNameAndReleaseYear(String name, int releaseYear);
+
     @Modifying
     @Query("update Movie m set m.name=:name," +
             " m.description=:description," +
