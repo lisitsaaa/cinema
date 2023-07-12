@@ -3,6 +3,7 @@ package com.example.cinema.service;
 import com.example.cinema.entity.cinema.Cinema;
 import com.example.cinema.entity.cinema.Hall;
 import com.example.cinema.entity.cinema.seat.Seat;
+import com.example.cinema.exception.ExistsException;
 import com.example.cinema.exception.NotFoundException;
 import com.example.cinema.repository.HallRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,9 @@ public class HallService implements AbstractService<Hall> {
 
     @Override
     public Hall save(Hall hall) {
+        if (hallRepository.findByName(hall.getName()).isPresent()) {
+            throw new ExistsException(String.format("Hall with name - %s already existed", hall.getName()));
+        }
         hall.getSeats().forEach(seat -> seat.setHall(hall));
         return hallRepository.save(hall);
     }
