@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Logger;
 
 @Service
 @Transactional
@@ -24,40 +25,53 @@ public class OrderService implements AbstractService<Order> {
     @Autowired
     private SeatRepository seatRepository;
 
+    private final static Logger logger = Logger.getLogger(CinemaService.class.getName());
+
     @Override
     public Order save(Order order) {
+        logger.info("saving is started");
         Optional<Seat> seat = seatRepository.findByHallAndRowAndSeat(order.getSeat().getHall(),
                 order.getSeat().getRow(),
                 order.getSeat().getSeat());
         if (seat.isPresent()) {
             if (seat.get().getSeatStatus().equals(SeatStatus.BOOKED) ||
                     seat.get().getSeatStatus().equals(SeatStatus.OCCUPIED)) {
+                logger.info("already existed");
                 throw new ExistsException(String.format("seat - %s", seat.get().getSeatStatus()));
             }
         }
+        logger.info("order session was successfully saved");
         return orderRepository.save(order);
     }
 
     @Override
     public void remove(long id) {
+        logger.info("removing is started");
         orderRepository.delete(findById(id));
+        logger.info("removing was successfully finished");
     }
 
     @Override
     @Transactional(readOnly = true)
     public Order findById(long id) {
+        logger.info("searching by id is started");
         Optional<Order> order = orderRepository.findById(id);
         if (order.isPresent()) {
+            logger.info("searching by id was successfully finished");
             return order.get();
         }
+        logger.info("not found");
         throw new NotFoundException(String.format("Order with id = %s not found", id));
     }
 
     public List<Order> findAllByUser(User user) {
+        logger.info("searching all by user is started");
         List<Order> orders = orderRepository.findAllByUser(user);
         if (orders.isEmpty()) {
+            logger.info("not found");
             throw new NotFoundException(String.format("Orders with user's name - %s not found", user.getUsername()));
         }
+        logger.info("searching all by user was successfully finished");
         return orderRepository.findAllByUser(user);
     }
 }
