@@ -12,9 +12,8 @@ import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.cinema.controller.util.Validator.getValidationResult;
+import static com.example.cinema.controller.util.Validator.checkBindingResult;
 import static com.example.cinema.mapper.MovieMapper.INSTANCE;
-import static org.springframework.http.ResponseEntity.badRequest;
 import static org.springframework.http.ResponseEntity.ok;
 
 @RestController
@@ -26,9 +25,7 @@ public class MovieController {
     @PostMapping
     public ResponseEntity<MovieDto> create(@RequestBody @Valid MovieDto dto,
                                            BindingResult bindingResult) {
-        if (!getValidationResult(bindingResult)) {
-            return badRequest().build();
-        }
+        checkBindingResult(bindingResult);
         return ok(INSTANCE.movieToDto(movieService.save(INSTANCE.dtoToMovie(dto))));
     }
 
@@ -42,16 +39,13 @@ public class MovieController {
         List<MovieDto> movieDtoList = new ArrayList<>();
         movieService.findAll()
                 .forEach(movie -> movieDtoList.add(INSTANCE.movieToDto(movie)));
-
         return ok(movieDtoList);
     }
 
     @PostMapping("/find-by-name")
     public ResponseEntity<MovieDto> getByName(@RequestBody @Valid MovieDto dto,
                                               BindingResult bindingResult) {
-        if (!getValidationResult(bindingResult)) {
-            return badRequest().build();
-        }
+        checkBindingResult(bindingResult);
         return ok(INSTANCE.movieToDto(movieService.findByName(dto.getName())));
     }
 
@@ -59,9 +53,7 @@ public class MovieController {
     public ResponseEntity<MovieDto> update(@PathVariable long id,
                                            @RequestBody @Valid Movie movie,
                                            BindingResult bindingResult) {
-        if (!getValidationResult(bindingResult)) {
-            return badRequest().build();
-        }
+        checkBindingResult(bindingResult);
         return ok(INSTANCE.movieToDto(getUpdatingMovie(id, movie)));
     }
 

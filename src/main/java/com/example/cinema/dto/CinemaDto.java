@@ -13,13 +13,11 @@ import java.util.List;
 @Data
 @NoArgsConstructor @AllArgsConstructor
 public class CinemaDto {
-    @NotNull
-    @NotEmpty
-    @NotBlank
+    @NotNull @NotEmpty @NotBlank
     private String name;
-    @NotNull
-    @NotEmpty
-    @NotBlank
+
+    @NotNull @NotEmpty @NotBlank
     private String city;
+
     private List<Hall> halls;
 }

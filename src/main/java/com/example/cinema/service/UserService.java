@@ -1,6 +1,8 @@
 package com.example.cinema.service;
 
 import com.example.cinema.entity.user.User;
+import com.example.cinema.exception.ExistsException;
+import com.example.cinema.exception.NotFoundException;
 import com.example.cinema.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,7 +24,10 @@ public class UserService implements UserDetailsService, AbstractService<User> {
         return new BCryptPasswordEncoder();
     }
 
-    public User save(User user){
+    public User save(User user) {
+        if (userRepository.findByUsername(user.getUsername()).isPresent()) {
+            throw new ExistsException(String.format("User with username - %s already existed", user.getUsername()));
+        }
         user.setPassword(passwordEncoder().encode(user.getPassword()));
         return userRepository.save(user);
     }
@@ -38,10 +43,10 @@ public class UserService implements UserDetailsService, AbstractService<User> {
         if (user.isPresent()) {
             return user.get();
         }
-        throw new RuntimeException("incorrect id");
+        throw new NotFoundException(String.format("User with id - %s not found", id));
     }
 
-    public void updatePassword(User user){
+    public void updatePassword(User user) {
         user.setPassword(passwordEncoder().encode(user.getPassword()));
         userRepository.updatePassword(user.getId(), user.getPassword());
     }
@@ -51,15 +56,15 @@ public class UserService implements UserDetailsService, AbstractService<User> {
     }
 
     @Transactional(readOnly = true)
-    public User findByUsername(String username){
+    public User findByUsername(String username) {
         Optional<User> byUsername = userRepository.findByUsername(username);
         if (byUsername.isPresent()) {
             return byUsername.get();
         }
-        throw new RuntimeException("User not found");
+        throw new NotFoundException(String.format("User with username - %s not found", username));
     }
 
-    public User login(User user){
+    public User login(User user) {
         User byUsername = findByUsername(user.getUsername());
         if (passwordEncoder().matches(user.getPassword(), byUsername.getPassword())) {
             return byUsername;
@@ -73,6 +78,6 @@ public class UserService implements UserDetailsService, AbstractService<User> {
         if (byUsername.isPresent()) {
             return byUsername.get();
         }
-        throw new RuntimeException("User not found!"); //exception
+        throw new NotFoundException(String.format("User with username - %s not found", username));
     }
 }

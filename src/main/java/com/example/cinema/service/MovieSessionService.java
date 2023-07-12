@@ -3,6 +3,8 @@ package com.example.cinema.service;
 import com.example.cinema.entity.cinema.Cinema;
 import com.example.cinema.entity.cinema.MovieSession;
 import com.example.cinema.entity.cinema.movie.Movie;
+import com.example.cinema.exception.ExistsException;
+import com.example.cinema.exception.NotFoundException;
 import com.example.cinema.repository.MovieSessionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,12 +16,20 @@ import java.util.Optional;
 
 @Service
 @Transactional
-public class MovieSessionService implements AbstractService<MovieSession>{
+public class MovieSessionService implements AbstractService<MovieSession> {
     @Autowired
     private MovieSessionRepository movieSessionRepository;
 
     @Override
-    public MovieSession save(MovieSession movieSession){
+    public MovieSession save(MovieSession movieSession) {
+        if (movieSessionRepository.findByDateAndStartedTimeAndHall(movieSession.getDate(),
+                        movieSession.getStartedTime(),
+                        movieSession.getHall())
+                .isPresent()) {
+            throw new ExistsException(String.format("Hall - %s in this date - %s and time %s already existed", movieSession.getHall().getName(),
+                    movieSession.getDate(),
+                    movieSession.getStartedTime()));
+        }
         return movieSessionRepository.save(movieSession);
     }
 
@@ -30,12 +40,12 @@ public class MovieSessionService implements AbstractService<MovieSession>{
 
     @Override
     @Transactional(readOnly = true)
-    public MovieSession findById(long id){
+    public MovieSession findById(long id) {
         Optional<MovieSession> byId = movieSessionRepository.findById(id);
         if (byId.isPresent()) {
             return byId.get();
         }
-        throw new RuntimeException("incorrect id");
+        throw new NotFoundException(String.format("MovieSession with id = %s not found", id));
     }
 
     public void update(MovieSession movieSession) {
@@ -44,17 +54,29 @@ public class MovieSessionService implements AbstractService<MovieSession>{
     }
 
     @Transactional(readOnly = true)
-    public List<MovieSession> findAllByDate(LocalDate date){
-        return movieSessionRepository.findByDate(date);
+    public List<MovieSession> findAllByDate(LocalDate date) {
+        List<MovieSession> movieSessions = movieSessionRepository.findByDate(date);
+        if (movieSessions.isEmpty()) {
+            throw new NotFoundException(String.format("MovieSessions with date = %s not found", date));
+        }
+        return movieSessions;
     }
 
     @Transactional(readOnly = true)
-    public List<MovieSession> findAllByCinema(Cinema cinema){
-        return movieSessionRepository.findByCinema(cinema);
+    public List<MovieSession> findAllByCinema(Cinema cinema) {
+        List<MovieSession> movieSessions = movieSessionRepository.findByCinema(cinema);
+        if (movieSessions.isEmpty()) {
+            throw new NotFoundException(String.format("MovieSessions with cinema's name - %s not found", cinema.getName()));
+        }
+        return movieSessions;
     }
 
     @Transactional(readOnly = true)
-    public List<MovieSession> findAllByMovie(Movie movie){
-        return movieSessionRepository.findByMovie(movie);
+    public List<MovieSession> findAllByMovie(Movie movie) {
+        List<MovieSession> movieSessions = movieSessionRepository.findByMovie(movie);
+        if (movieSessions.isEmpty()) {
+            throw new NotFoundException(String.format("MovieSessions with movie's name - %s not found", movie.getName()));
+        }
+        return movieSessions;
     }
 }

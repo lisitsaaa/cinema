@@ -12,9 +12,8 @@ import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.cinema.controller.util.Validator.getValidationResult;
+import static com.example.cinema.controller.util.Validator.checkBindingResult;
 import static com.example.cinema.mapper.CinemaMapper.INSTANCE;
-import static org.springframework.http.ResponseEntity.badRequest;
 import static org.springframework.http.ResponseEntity.ok;
 
 @RestController
@@ -25,20 +24,16 @@ public class CinemaController {
 
     @PostMapping
     public ResponseEntity<CinemaDto> create(@RequestBody @Valid CinemaDto dto,
-                                         BindingResult bindingResult) {
-        if (!getValidationResult(bindingResult)) {
-            return badRequest().build();
-        }
+                                            BindingResult bindingResult) {
+        checkBindingResult(bindingResult);
         return ok(INSTANCE.cinemaToDto(cinemaService.save(INSTANCE.dtoToUser(dto))));
     }
 
     @PostMapping("/update/{id}")
     public ResponseEntity<CinemaDto> update(@RequestBody @Valid Cinema cinema,
-                                         BindingResult bindingResult,
-                                         @PathVariable long id) {
-        if (!getValidationResult(bindingResult)) {
-            return badRequest().build();
-        }
+                                            BindingResult bindingResult,
+                                            @PathVariable long id) {
+        checkBindingResult(bindingResult);
         Cinema cinemaById = cinemaService.findById(id);
         cinemaById.setName(cinema.getName());
         cinemaService.update(cinemaById);
@@ -60,7 +55,6 @@ public class CinemaController {
         List<CinemaDto> cinemaDtoList = new ArrayList<>();
         cinemaService.findByCity(city)
                 .forEach(cinema -> cinemaDtoList.add(INSTANCE.cinemaToDto(cinema)));
-
         return ok(cinemaDtoList);
     }
 

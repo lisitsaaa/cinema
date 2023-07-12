@@ -16,10 +16,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.Set;
 
-import static com.example.cinema.controller.util.Validator.getValidationResult;
+import static com.example.cinema.controller.util.Validator.checkBindingResult;
 import static com.example.cinema.mapper.UserAuthorizationMapper.AUTH_INSTANCE;
 import static com.example.cinema.mapper.UserMapper.INSTANCE;
-import static org.springframework.http.ResponseEntity.badRequest;
 import static org.springframework.http.ResponseEntity.ok;
 
 @RestController
@@ -31,37 +30,31 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<UserDto> registration(@RequestBody @Valid UserDto regDto,
-                                             BindingResult bindingResult){
-        if (!getValidationResult(bindingResult)) {
-            return badRequest().build();
-        }
+                                                BindingResult bindingResult) {
+        checkBindingResult(bindingResult);
         regDto.setRoles(Set.of(Role.USER));
         return ok(INSTANCE.userToDto(userService.save(INSTANCE.dtoToUser(regDto))));
     }
 
     @PostMapping("/login")
     public ResponseEntity<String> authorization(@RequestBody @Valid UserAuthorizationDto authDto,
-                                                BindingResult bindingResult){
-        if (getValidationResult(bindingResult)) {
-            User login = userService.login(AUTH_INSTANCE.dtoToUser(authDto));
-            String token = jwtTokenProvider.generateToken(login.getUsername(), login.getRoles());
-            return ok(token);
-        }
-        return badRequest().body("Invalid information");
+                                                BindingResult bindingResult) {
+        checkBindingResult(bindingResult);
+        User login = userService.login(AUTH_INSTANCE.dtoToUser(authDto));
+        String token = jwtTokenProvider.generateToken(login.getUsername(), login.getRoles());
+        return ok(token);
     }
 
     @DeleteMapping("/{id}")
-    public void remove(@PathVariable long id){
+    public void remove(@PathVariable long id) {
         userService.remove(id);
     }
 
     @PostMapping("/update-password")
     public ResponseEntity<UserDto> updatePassword(@AuthenticationPrincipal UserDetails userDetails,
                                                   @RequestBody @Valid User user,
-                                                  BindingResult bindingResult){
-        if (!getValidationResult(bindingResult)) {
-            return badRequest().build();
-        }
+                                                  BindingResult bindingResult) {
+        checkBindingResult(bindingResult);
         User byUsername = userService.findByUsername(userDetails.getUsername());
         byUsername.setPassword(user.getPassword());
         userService.updatePassword(byUsername);
@@ -70,12 +63,11 @@ public class UserController {
 
     @PostMapping("/update")
     public ResponseEntity<UserDto> updatePersonalInfo(@AuthenticationPrincipal UserDetails userDetails,
-                                       @RequestBody @Valid User user,
-                                       BindingResult bindingResult){
-        if (!getValidationResult(bindingResult)) {
-            return badRequest().build();
-        }
+                                                      @RequestBody @Valid User user,
+                                                      BindingResult bindingResult) {
+        checkBindingResult(bindingResult);
         User byUsername = userService.findByUsername(userDetails.getUsername());
+
         if (!user.getUsername().isEmpty()) {
             byUsername.setUsername(user.getUsername());
         }

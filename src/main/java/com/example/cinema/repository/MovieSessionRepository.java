@@ -13,6 +13,7 @@ import org.springframework.stereotype.Repository;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface MovieSessionRepository extends JpaRepository<MovieSession, Long> {
@@ -21,6 +22,8 @@ public interface MovieSessionRepository extends JpaRepository<MovieSession, Long
     List<MovieSession> findByCinema(Cinema cinema);
 
     List<MovieSession> findByMovie(Movie movie);
+
+    Optional<MovieSession> findByDateAndStartedTimeAndHall(LocalDate date, LocalTime startedTime, Hall hall);
 
     @Modifying
     @Query("update MovieSession ms set ms.date=:date, " +

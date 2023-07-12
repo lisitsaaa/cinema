@@ -2,6 +2,8 @@ package com.example.cinema.service;
 
 import com.example.cinema.entity.cinema.Cinema;
 import com.example.cinema.entity.cinema.seat.Seat;
+import com.example.cinema.exception.ExistsException;
+import com.example.cinema.exception.NotFoundException;
 import com.example.cinema.repository.CinemaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,7 +23,9 @@ public class CinemaService implements AbstractService<Cinema> {
     public Cinema save(Cinema cinema) {
         Optional<Cinema> byCityAndName = cinemaRepository.findByCityAndName(cinema.getCity(), cinema.getName());
         if (byCityAndName.isPresent()) {
-            throw new RuntimeException("cinema's already had");
+            throw new ExistsException(String.format("Cinema with name - %s and city - %s already existed",
+                    cinema.getName(),
+                    cinema.getCity()));
         }
         return cinemaRepository.save(cinema);
     }
@@ -42,7 +46,7 @@ public class CinemaService implements AbstractService<Cinema> {
                             .thenComparing(Seat::getSeat)));
             return cinema;
         }
-        throw new RuntimeException("incorrect id");
+        throw new NotFoundException(String.format("Cinema with id = %s not found", id));
     }
 
     public void update(Cinema cinema) {
@@ -50,16 +54,20 @@ public class CinemaService implements AbstractService<Cinema> {
     }
 
     @Transactional(readOnly = true)
-    public List<Cinema> findByCity(String city){
-        return cinemaRepository.findByCity(city);
+    public List<Cinema> findByCity(String cityName) {
+        List<Cinema> cinemas = cinemaRepository.findByCity(cityName);
+        if (cinemas.isEmpty()) {
+            throw new NotFoundException(String.format("Cinemas from city - %s not found", cityName));
+        }
+        return cinemas;
     }
 
     @Transactional(readOnly = true)
-    public Cinema findByName(String name){
+    public Cinema findByName(String name) {
         Optional<Cinema> byName = cinemaRepository.findByName(name);
         if (byName.isPresent()) {
             return byName.get();
         }
-        throw new RuntimeException("incorrect name");
+        throw new NotFoundException(String.format("Cinema with name - %s not found", name));
     }
 }

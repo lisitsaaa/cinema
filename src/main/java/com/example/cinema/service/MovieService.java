@@ -1,6 +1,8 @@
 package com.example.cinema.service;
 
 import com.example.cinema.entity.cinema.movie.Movie;
+import com.example.cinema.exception.ExistsException;
+import com.example.cinema.exception.NotFoundException;
 import com.example.cinema.repository.MovieRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,12 +13,17 @@ import java.util.Optional;
 
 @Service
 @Transactional
-public class MovieService implements AbstractService<Movie>{
+public class MovieService implements AbstractService<Movie> {
     @Autowired
     private MovieRepository movieRepository;
 
     @Override
-    public Movie save(Movie movie){
+    public Movie save(Movie movie) {
+        if (movieRepository.findByNameAndReleaseYear(movie.getName(), movie.getReleaseYear()).isPresent()) {
+            throw new ExistsException(String.format("Movie with name - %s and release year - %5 already existed",
+                    movie.getName(),
+                    movie.getReleaseYear()));
+        }
         return movieRepository.save(movie);
     }
 
@@ -32,7 +39,7 @@ public class MovieService implements AbstractService<Movie>{
         if (movie.isPresent()) {
             return movie.get();
         }
-        throw new RuntimeException("incorrect id");
+        throw new NotFoundException(String.format("Movie with id = %s not found", id));
     }
 
     public void update(Movie movie) {
@@ -42,16 +49,16 @@ public class MovieService implements AbstractService<Movie>{
     }
 
     @Transactional(readOnly = true)
-    public List<Movie> findAll(){
+    public List<Movie> findAll() {
         return movieRepository.findAll();
     }
 
     @Transactional(readOnly = true)
-    public Movie findByName(String name){
+    public Movie findByName(String name) {
         Optional<Movie> byName = movieRepository.findByName(name);
         if (byName.isPresent()) {
             return byName.get();
         }
-        throw new RuntimeException("incorrect name");
+        throw new NotFoundException(String.format("Movie with name - %s not found", name));
     }
 }
