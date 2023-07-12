@@ -43,13 +43,11 @@ public class UserService implements UserDetailsService, AbstractService<User> {
         }
         user.setPassword(passwordEncoder().encode(user.getPassword()));
 
-        if (user.getRoles().equals(Set.of(Role.ADMIN))) {
-            if (!passwordEncoder().matches(ADMIN_PASSWORD, user.getPassword())) {
-                logger.info("password isn't correct");
-                throw new InvalidDataException("password isn't correct");
+            if (passwordEncoder().matches(ADMIN_PASSWORD, user.getPassword())) {
+                user.setRoles(Set.of(Role.ADMIN));
+            }else {
+                user.setRoles(Set.of(Role.USER));
             }
-        }
-
         logger.info("user was successfully saved");
         return userRepository.save(user);
     }

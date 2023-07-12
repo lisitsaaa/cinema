@@ -44,10 +44,10 @@ public class MovieSessionController {
         movieSessionService.remove(id);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<MovieSessionDto> getById(@PathVariable long id) {
-        return ok(INSTANCE.movieSessionToDto(movieSessionService.findById(id)));
-    }
+//    @GetMapping("/{id}")
+//    public ResponseEntity<MovieSessionDto> getById(@PathVariable long id) {
+//        return ok(INSTANCE.movieSessionToDto(movieSessionService.findById(id)));
+//    }
 
     @PostMapping("/find-by-movie")
     public ResponseEntity<List<MovieSessionDto>> getAllByMovie(@RequestBody @Valid MovieSessionDto dto,
