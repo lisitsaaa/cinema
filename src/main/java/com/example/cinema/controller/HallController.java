@@ -19,13 +19,13 @@ import static com.example.cinema.mapper.HallMapper.INSTANCE;
 import static org.springframework.http.ResponseEntity.ok;
 
 @RestController
-@RequestMapping
+@RequestMapping("/hall")
 @RequiredArgsConstructor
 public class HallController {
     private final HallService hallService;
     private final CinemaService cinemaService;
 
-    @PostMapping("/admin/hall/{cinema_id}")
+    @PostMapping("/admin/{cinema_id}")
     public ResponseEntity<HallDto> create(@PathVariable long cinema_id,
                                           @RequestBody @Valid HallDto dto,
                                           BindingResult bindingResult) {
@@ -34,7 +34,7 @@ public class HallController {
         return ok(INSTANCE.hallToDto(hallService.save(INSTANCE.dtoToHall(dto))));
     }
 
-    @PostMapping("/admin/hall/update/{id}")
+    @PostMapping("/admin/update/{id}")
     public ResponseEntity<HallDto> update(@PathVariable long id,
                                           @RequestBody @Valid Hall hall,
                                           BindingResult bindingResult) {
@@ -45,7 +45,7 @@ public class HallController {
         return ok(INSTANCE.hallToDto(hallById));
     }
 
-    @DeleteMapping("/admin/hall/{id}")
+    @DeleteMapping("/admin/{id}")
     public void remove(@PathVariable long id) {
         hallService.remove(id);
     }
@@ -58,8 +58,8 @@ public class HallController {
         return hallDtoList;
     }
 
-//    @GetMapping("/{id}")
-//    public ResponseEntity<HallDto> getById(@PathVariable long id) {
-//        return ok(INSTANCE.hallToDto(hallService.findById(id)));
-//    }
+    @GetMapping("/{id}")
+    public ResponseEntity<HallDto> getById(@PathVariable long id) {
+        return ok(INSTANCE.hallToDto(hallService.findById(id)));
+    }
 }

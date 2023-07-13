@@ -21,7 +21,7 @@ import static com.example.cinema.mapper.MovieSessionMapper.INSTANCE;
 import static org.springframework.http.ResponseEntity.ok;
 
 @RestController
-@RequestMapping
+@RequestMapping("/movie-session")
 @RequiredArgsConstructor
 public class MovieSessionController {
     private final MovieSessionService movieSessionService;
@@ -29,7 +29,7 @@ public class MovieSessionController {
     private final HallService hallService;
     private final MovieService movieService;
 
-    @PostMapping("/admin/movie-session")
+    @PostMapping("/admin")
     public ResponseEntity<MovieSessionDto> create(@RequestBody @Valid MovieSessionDto dto,
                                                   BindingResult bindingResult) {
         checkBindingResult(bindingResult);
@@ -39,15 +39,15 @@ public class MovieSessionController {
         return ok(INSTANCE.movieSessionToDto(movieSessionService.save(INSTANCE.dtoToMovieSession(dto))));
     }
 
-    @DeleteMapping("/admin/movie-session/{id}")
+    @DeleteMapping("/admin/{id}")
     public void remove(@PathVariable long id) {
         movieSessionService.remove(id);
     }
 
-//    @GetMapping("/{id}")
-//    public ResponseEntity<MovieSessionDto> getById(@PathVariable long id) {
-//        return ok(INSTANCE.movieSessionToDto(movieSessionService.findById(id)));
-//    }
+    @GetMapping("/{id}")
+    public ResponseEntity<MovieSessionDto> getById(@PathVariable long id) {
+        return ok(INSTANCE.movieSessionToDto(movieSessionService.findById(id)));
+    }
 
     @PostMapping("/find-by-movie")
     public ResponseEntity<List<MovieSessionDto>> getAllByMovie(@RequestBody @Valid MovieSessionDto dto,
@@ -79,7 +79,7 @@ public class MovieSessionController {
         return ok(movieSessionDtoList);
     }
 
-    @PostMapping("/admin/movie-session/update/{id}")
+    @PostMapping("/admin/update/{id}")
     public ResponseEntity<MovieSessionDto> update(@PathVariable long id,
                                                   @RequestBody @Valid MovieSession movieSession,
                                                   BindingResult bindingResult) {

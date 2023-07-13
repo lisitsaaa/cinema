@@ -18,7 +18,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
 
     private final JWTTokenFilter jwtTokenFilter;
 
-    private static final String ADMIN_ENDPOINT = "/admin/**";
+    private static final String ADMIN_ENDPOINT = "/**/admin/**";
     private static final String LOGIN_ENDPOINT = "/user/login";
     private static final String REG_ENDPOINT = "/user";
 

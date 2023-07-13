@@ -17,19 +17,19 @@ import static com.example.cinema.mapper.CinemaMapper.INSTANCE;
 import static org.springframework.http.ResponseEntity.ok;
 
 @RestController
-@RequestMapping
+@RequestMapping("/cinema")
 @RequiredArgsConstructor
 public class CinemaController {
     private final CinemaService cinemaService;
 
-    @PostMapping("/admin/cinema")
+    @PostMapping("/admin")
     public ResponseEntity<CinemaDto> create(@RequestBody @Valid CinemaDto dto,
                                             BindingResult bindingResult) {
         checkBindingResult(bindingResult);
         return ok(INSTANCE.cinemaToDto(cinemaService.save(INSTANCE.dtoToUser(dto))));
     }
 
-    @PostMapping("/admin/cinema/update/{id}")
+    @PostMapping("/admin/update/{id}")
     public ResponseEntity<CinemaDto> update(@RequestBody @Valid Cinema cinema,
                                             BindingResult bindingResult,
                                             @PathVariable long id) {
@@ -40,7 +40,7 @@ public class CinemaController {
         return ok(INSTANCE.cinemaToDto(cinemaById));
     }
 
-    @DeleteMapping("/admin/cinema/{id}")
+    @DeleteMapping("/admin/{id}")
     public void remove(@PathVariable long id) {
         cinemaService.remove(id);
     }

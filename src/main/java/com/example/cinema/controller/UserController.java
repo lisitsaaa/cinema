@@ -3,7 +3,6 @@ package com.example.cinema.controller;
 import com.example.cinema.configuration.jwt.JWTTokenProvider;
 import com.example.cinema.dto.UserAuthorizationDto;
 import com.example.cinema.dto.UserDto;
-import com.example.cinema.entity.user.Role;
 import com.example.cinema.entity.user.User;
 import com.example.cinema.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +13,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.Set;
 
 import static com.example.cinema.controller.util.Validator.checkBindingResult;
 import static com.example.cinema.mapper.UserAuthorizationMapper.AUTH_INSTANCE;
