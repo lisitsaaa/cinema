@@ -24,7 +24,7 @@ import static com.example.cinema.mapper.OrderMapper.INSTANCE;
 import static org.springframework.http.ResponseEntity.ok;
 
 @RestController
-@RequestMapping
+@RequestMapping("/order")
 @RequiredArgsConstructor
 public class OrderController {
     private final OrderService orderService;
@@ -32,7 +32,7 @@ public class OrderController {
     private final MovieSessionService movieSessionService;
     private final UserService userService;
 
-    @PostMapping("/admin/order/{movie_session_id}")
+    @PostMapping("/admin/{movie_session_id}")
     public ResponseEntity<Order> create(@RequestBody @Valid SeatDto seatDto,
                                         BindingResult bindingResult,
                                         @PathVariable long movie_session_id,
@@ -55,7 +55,7 @@ public class OrderController {
         return dto;
     }
 
-    @DeleteMapping("/admin/order/{id}")
+    @DeleteMapping("/admin/{id}")
     public void remove(@PathVariable long id) {
         orderService.remove(id);
     }

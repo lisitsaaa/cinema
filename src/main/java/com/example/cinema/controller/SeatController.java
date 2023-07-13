@@ -16,7 +16,7 @@ import static com.example.cinema.mapper.SeatMapper.INSTANCE;
 import static org.springframework.http.ResponseEntity.ok;
 
 @RestController
-@RequestMapping("/admin/seat")
+@RequestMapping("/seat/admin")
 @RequiredArgsConstructor
 public class SeatController {
     private final SeatService seatService;
