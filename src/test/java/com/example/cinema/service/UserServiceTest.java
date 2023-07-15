@@ -41,7 +41,7 @@ class UserServiceTest {
 
     @Test
     @DisplayName("JUnit test for save method")
-    void save() {
+    void UserService_Save_ReturnUser() {
         when(userRepository.findByUsername(user.getUsername())).thenReturn(Optional.empty());
         when(userRepository.save(Mockito.any(User.class))).thenReturn(user);
 
@@ -52,7 +52,7 @@ class UserServiceTest {
 
     @Test
     @DisplayName("JUnit test for remove method")
-    void remove() {
+    void UserService_Remove_ReturnNothing() {
         when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
         doNothing().when(userRepository).delete(user);
         userService.remove(user.getId());
@@ -60,7 +60,7 @@ class UserServiceTest {
 
     @Test
     @DisplayName("JUnit test for findById method")
-    void findById() {
+    void UserService_FindById_ReturnUser() {
         when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
 
         User userById = userService.findById(user.getId());
@@ -70,7 +70,7 @@ class UserServiceTest {
 
     @Test
     @DisplayName("JUnit test for findByName method")
-    void findByUsername() {
+    void UserService_FindByUsername_ReturnUser() {
         when(userRepository.findByUsername(user.getUsername())).thenReturn(Optional.of(user));
 
         User userByUsername = userService.findByUsername(user.getUsername());
