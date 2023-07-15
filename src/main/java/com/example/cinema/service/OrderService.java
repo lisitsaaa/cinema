@@ -1,13 +1,9 @@
 package com.example.cinema.service;
 
 import com.example.cinema.entity.cinema.Order;
-import com.example.cinema.entity.cinema.seat.Seat;
-import com.example.cinema.entity.cinema.seat.SeatStatus;
 import com.example.cinema.entity.user.User;
-import com.example.cinema.exception.ExistsException;
 import com.example.cinema.exception.NotFoundException;
 import com.example.cinema.repository.OrderRepository;
-import com.example.cinema.repository.SeatRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,25 +18,11 @@ public class OrderService implements AbstractService<Order> {
     @Autowired
     private OrderRepository orderRepository;
 
-    @Autowired
-    private SeatRepository seatRepository;
-
     private final static Logger logger = Logger.getLogger(CinemaService.class.getName());
 
     @Override
     public Order save(Order order) {
         logger.info("saving is started");
-        Optional<Seat> seat = seatRepository.findByHallAndRowAndSeat(order.getSeat().getHall(),
-                order.getSeat().getRow(),
-                order.getSeat().getSeat());
-        if (seat.isPresent()) {
-            if (seat.get().getSeatStatus().equals(SeatStatus.BOOKED) ||
-                    seat.get().getSeatStatus().equals(SeatStatus.OCCUPIED)) {
-                logger.info("already existed");
-                throw new ExistsException(String.format("seat - %s", seat.get().getSeatStatus()));
-            }
-        }
-        logger.info("order session was successfully saved");
         return orderRepository.save(order);
     }
 

@@ -5,6 +5,9 @@ import com.example.cinema.dto.SeatDto;
 import com.example.cinema.entity.cinema.MovieSession;
 import com.example.cinema.entity.cinema.Order;
 import com.example.cinema.entity.cinema.seat.Seat;
+import com.example.cinema.entity.cinema.seat.SeatStatus;
+import com.example.cinema.exception.ExistsException;
+import com.example.cinema.mapper.SeatMapper;
 import com.example.cinema.service.MovieSessionService;
 import com.example.cinema.service.OrderService;
 import com.example.cinema.service.SeatService;
@@ -33,26 +36,32 @@ public class OrderController {
     private final UserService userService;
 
     @PostMapping("/admin/{movie_session_id}")
-    public ResponseEntity<Order> create(@RequestBody @Valid SeatDto seatDto,
-                                        BindingResult bindingResult,
-                                        @PathVariable long movie_session_id,
-                                        @AuthenticationPrincipal UserDetails userDetails) {
+    public ResponseEntity<OrderDto> create(@RequestBody @Valid SeatDto seatDto,
+                                           BindingResult bindingResult,
+                                           @PathVariable long movie_session_id,
+                                           @AuthenticationPrincipal UserDetails userDetails) {
         checkBindingResult(bindingResult);
-        return ok(orderService.save(INSTANCE.dtoToOrder(getOrderDto(userDetails, movie_session_id, seatDto))));
+        return ok(INSTANCE.orderToDto(orderService.save(getOrder(movie_session_id, seatDto, userDetails))));
     }
 
-    private OrderDto getOrderDto(UserDetails userDetails,
-                                 long movie_session_id,
-                                 SeatDto seatDto) {
+    private Order getOrder(long movie_session_id, SeatDto seatDto, UserDetails userDetails){
         MovieSession movieSession = movieSessionService.findById(movie_session_id);
-        Seat seat = seatService.updateSeatStatus(movieSession.getHall(), seatDto);
-        seat.setSeatStatus(seatDto.getSeatStatus());
+        Seat seat = seatService.findByHallAndRowAndSeat(movieSession.getHall(),
+                seatDto.getRow(),
+                seatDto.getSeat());
 
-        OrderDto dto = new OrderDto();
-        dto.setUser(userService.findByUsername(userDetails.getUsername()));
-        dto.setMovieSession(movieSession);
-        dto.setSeat(seat);
-        return dto;
+        if (seat.getSeatStatus().equals(SeatStatus.BOOKED)) {
+            throw new ExistsException(String.format("Sorry, seat - %s", SeatStatus.BOOKED));
+        }
+
+        seat.setSeatStatus(seatDto.getSeatStatus());
+        seatService.updateSeatStatus(seat);
+
+        return Order.builder()
+                .user(userService.findByUsername(userDetails.getUsername()))
+                .movieSession(movieSession)
+                .seat(seat)
+                .build();
     }
 
     @DeleteMapping("/admin/{id}")

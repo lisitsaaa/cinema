@@ -1,6 +1,5 @@
 package com.example.cinema.service;
 
-import com.example.cinema.dto.SeatDto;
 import com.example.cinema.entity.cinema.Hall;
 import com.example.cinema.entity.cinema.seat.Seat;
 import com.example.cinema.exception.ExistsException;
@@ -58,12 +57,10 @@ public class SeatService implements AbstractService<Seat> {
         throw new NotFoundException(String.format("Seat with id - %s not found", id));
     }
 
-    public Seat updateSeatStatus(Hall hall, SeatDto dto) {
+    public void updateSeatStatus(Seat seat) {
         logger.info("updating is started");
-        Seat seat = findByHallAndRowAndSeat(hall, dto.getRow(), dto.getSeat());
-        seatRepository.update(seat.getId(), dto.getSeatStatus());
+        seatRepository.update(seat.getId(), seat.getSeatStatus());
         logger.info("updating was successfully finished");
-        return seat;
     }
 
     @Transactional(readOnly = true)
