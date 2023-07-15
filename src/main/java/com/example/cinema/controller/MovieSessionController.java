@@ -1,6 +1,7 @@
 package com.example.cinema.controller;
 
 import com.example.cinema.dto.MovieSessionDto;
+import com.example.cinema.entity.cinema.Hall;
 import com.example.cinema.entity.cinema.MovieSession;
 import com.example.cinema.service.CinemaService;
 import com.example.cinema.service.HallService;
@@ -94,9 +95,6 @@ public class MovieSessionController {
         }
         if (!String.valueOf(movieSession.getPrice()).isEmpty()) {
             movieSessionById.setPrice(movieSession.getPrice());
-        }
-        if (!movieSession.getHallName().isEmpty()) {
-            movieSessionById.setHall(hallService.findByName(movieSessionById.getHallName()));
         }
         movieSessionService.update(movieSessionById);
         return ok(INSTANCE.movieSessionToDto(movieSessionById));

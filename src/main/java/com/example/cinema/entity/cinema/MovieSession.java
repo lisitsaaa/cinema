@@ -16,7 +16,6 @@ public class MovieSession extends AbstractEntity {
     private LocalDate date;
     private LocalTime startedTime;
     private double price;
-    private String hallName;
 
     @OneToOne
     private Movie movie;
