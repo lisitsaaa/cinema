@@ -27,6 +27,4 @@ public class MovieSessionDto {
     private Hall hall;
 
     private String movieName;
-    private String cinemaName;
-    private String hallName;
 }

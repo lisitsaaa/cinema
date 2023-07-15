@@ -30,13 +30,15 @@ public class MovieSessionController {
     private final HallService hallService;
     private final MovieService movieService;
 
-    @PostMapping("/admin")
-    public ResponseEntity<MovieSessionDto> create(@RequestBody @Valid MovieSessionDto dto,
+    @PostMapping("/admin/{hall_id}")
+    public ResponseEntity<MovieSessionDto> create(@PathVariable long hall_id,
+                                                  @RequestBody @Valid MovieSessionDto dto,
                                                   BindingResult bindingResult) {
         checkBindingResult(bindingResult);
         dto.setMovie(movieService.findByName(dto.getMovieName()));
-        dto.setCinema(cinemaService.findByName(dto.getCinemaName()));
-        dto.setHall(hallService.findByName(dto.getHallName()));
+        Hall hall = hallService.findById(hall_id);
+        dto.setCinema(hall.getCinema());
+        dto.setHall(hall);
         return ok(INSTANCE.movieSessionToDto(movieSessionService.save(INSTANCE.dtoToMovieSession(dto))));
     }
 
