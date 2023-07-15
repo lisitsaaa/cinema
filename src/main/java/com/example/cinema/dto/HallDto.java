@@ -17,7 +17,6 @@ public class HallDto {
     @NotNull @NotEmpty @NotBlank
     private String name;
 
-    @NotNull @NotEmpty @NotBlank
     private List<Seat> seats;
 
     private Cinema cinema;
