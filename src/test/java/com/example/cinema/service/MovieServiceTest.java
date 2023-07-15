@@ -56,7 +56,7 @@ class MovieServiceTest {
     }
 
     @Test
-    void save() {
+    void MovieRepository_Save_ReturnMovie() {
         when(movieRepository.findByNameAndReleaseYear(movie.getName(), movie.getReleaseYear()))
                 .thenReturn(empty());
         when(movieRepository.save(Mockito.any(Movie.class))).thenReturn(movie);
@@ -67,7 +67,7 @@ class MovieServiceTest {
     }
 
     @Test
-    void findById() {
+    void MovieRepository_FindById_ReturnMovie() {
         when(movieRepository.findById(movie.getId())).thenReturn(of(movie));
 
         Movie movieById = movieService.findById(movie.getId());
@@ -76,7 +76,7 @@ class MovieServiceTest {
     }
 
     @Test
-    void findAll() {
+    void MovieRepository_FindAll_ReturnMovieList() {
         when(movieRepository.findAll()).thenReturn(List.of(movie));
 
         List<Movie> movies = movieService.findAll();
@@ -85,7 +85,7 @@ class MovieServiceTest {
     }
 
     @Test
-    void findByName() {
+    void MovieRepository_FindByName_ReturnMovie() {
         when(movieRepository.findByName(movie.getName())).thenReturn(of(movie));
 
         Movie movieByName = movieService.findByName(movie.getName());

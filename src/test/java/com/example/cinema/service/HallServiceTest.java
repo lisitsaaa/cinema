@@ -57,7 +57,7 @@ class HallServiceTest {
     }
 
     @Test
-    void save() {
+    void HallRepository_Save_ReturnHall() {
         when(hallRepository.findByName(hall.getName())).thenReturn(Optional.empty());
         when(hallRepository.save(Mockito.any(Hall.class))).thenReturn(hall);
 
@@ -67,7 +67,7 @@ class HallServiceTest {
     }
 
     @Test
-    void findById() {
+    void HallRepository_FindById_ReturnHall() {
         when(hallRepository.findById(hall.getId())).thenReturn(Optional.of(hall));
 
         Hall hallById = hallService.findById(hall.getId());
@@ -76,7 +76,7 @@ class HallServiceTest {
     }
 
     @Test
-    void findAllByCinema() {
+    void HallRepository_FindAllByCinema_ReturnHallList() {
         when(hallRepository.findByCinema(hall.getCinema())).thenReturn(List.of(hall));
 
         List<Hall> halls = hallService.findAllByCinema(hall.getCinema());
@@ -86,7 +86,7 @@ class HallServiceTest {
     }
 
     @Test
-    void findByName() {
+    void HallRepository_FindByName_ReturnHall() {
         when(hallRepository.findByName(hall.getName())).thenReturn(Optional.of(hall));
 
         Hall hallByName = hallService.findByName(hall.getName());
