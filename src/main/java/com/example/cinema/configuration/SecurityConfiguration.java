@@ -6,15 +6,19 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-
+@EnableWebSecurity
 @Configuration
 @RequiredArgsConstructor
-public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
+public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private final JWTTokenFilter jwtTokenFilter;
 
@@ -39,7 +43,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
         http
                 .csrf()
                 .disable()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
                 .and()
                 .authorizeRequests()
                 .antMatchers(LOGIN_ENDPOINT).permitAll()
@@ -47,6 +51,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
                 .antMatchers(ADMIN_ENDPOINT).hasAuthority("ADMIN")
                 .antMatchers(HttpMethod.GET, PUBLIC_URLS).permitAll()
                 .antMatchers("/db/**").permitAll()
+                .antMatchers("/swagger-ui/**", "/javainuse-openapi/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
@@ -54,9 +59,16 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
                 .headers().frameOptions().sameOrigin();
     }
 
-    @Bean
     @Override
-    public AuthenticationManager authenticationManagerBean() throws Exception {
-        return super.authenticationManagerBean();
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.inMemoryAuthentication()
+                .withUser("lisitsaaa")
+                .password(passwordEncoder().encode("ADMIN"))
+                .authorities("ADMIN");
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 }
