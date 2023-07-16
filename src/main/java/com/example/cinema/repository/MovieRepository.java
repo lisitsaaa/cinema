@@ -1,16 +1,12 @@
 package com.example.cinema.repository;
 
-import com.example.cinema.entity.cinema.movie.AgeLimit;
-import com.example.cinema.entity.cinema.movie.Genre;
 import com.example.cinema.entity.cinema.movie.Movie;
-import com.example.cinema.entity.cinema.movie.MovieType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
 import java.util.Optional;
 
 @Repository

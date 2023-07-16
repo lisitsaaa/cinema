@@ -1,11 +1,15 @@
 package com.example.cinema.service;
 
 import com.example.cinema.entity.cinema.Cinema;
+import com.example.cinema.entity.cinema.Hall;
 import com.example.cinema.entity.cinema.MovieSession;
 import com.example.cinema.entity.cinema.movie.Movie;
+import com.example.cinema.entity.cinema.seat.Seat;
 import com.example.cinema.exception.ExistsException;
 import com.example.cinema.exception.NotFoundException;
+import com.example.cinema.repository.HallRepository;
 import com.example.cinema.repository.MovieSessionRepository;
+import com.example.cinema.repository.SeatRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +25,12 @@ public class MovieSessionService implements AbstractService<MovieSession> {
     @Autowired
     private MovieSessionRepository movieSessionRepository;
 
+    @Autowired
+    private HallRepository hallRepository;
+
+    @Autowired
+    private SeatRepository seatRepository;
+
     private final static Logger logger = Logger.getLogger(CinemaService.class.getName());
 
     @Override
@@ -35,8 +45,32 @@ public class MovieSessionService implements AbstractService<MovieSession> {
                     movieSession.getDate(),
                     movieSession.getStartedTime()));
         }
+        movieSession.setHall(getNewHall(movieSession.getHall(), movieSession));
         logger.info("movie session was successfully saved");
         return movieSessionRepository.save(movieSession);
+    }
+
+    private Hall getNewHall(Hall oldHall, MovieSession movieSession){
+        String newName = String.format("%s_date_%s_time_%s",
+                oldHall.getName(), movieSession.getDate(), movieSession.getStartedTime());
+        Optional<Hall> hall = hallRepository.findByName(newName);
+        if (hall.isEmpty()) {
+            Hall build = Hall.builder()
+                    .name(newName)
+                    .cinema(oldHall.getCinema())
+                    .build();
+            for (Seat seat : oldHall.getSeats()){
+                Seat buildSeat = Seat.builder()
+                        .row(seat.getRow())
+                        .seat(seat.getSeat())
+                        .seatStatus(seat.getSeatStatus())
+                        .seatType(seat.getSeatType())
+                        .hall(build).build();
+                seatRepository.save(buildSeat);
+            }
+            return hallRepository.save(build);
+        }
+        return hall.get();
     }
 
     @Override
